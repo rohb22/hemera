@@ -44,7 +44,7 @@ export default function TodayScreen() {
     <Screen>
       <View style={styles.header}>
         <View style={styles.brandRow}>
-          <Logo size={48} />
+          <Logo size={64} />
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Settings"
