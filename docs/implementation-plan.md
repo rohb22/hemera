@@ -41,7 +41,7 @@ A milestone is done only when all hold:
 
 ## 3. Milestones
 
-### M0 — Walking skeleton (foundations + one task end-to-end)
+### M0 — Walking skeleton (foundations + one task end-to-end) ✅ complete
 
 **Goal:** an installable app that persists one task through a real
 SQLite schema, proving the whole stack.
@@ -272,4 +272,5 @@ written until development is explicitly approved.**
 ---
 
 *Approved (stage 4). Stage 5 (development) began after explicit
-approval; M0 is in progress.*
+approval. M0 closed (device-verified via Expo Go; typecheck/lint/tests
+green); M1 in progress.*

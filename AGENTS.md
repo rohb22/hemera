@@ -4,8 +4,9 @@
 
 Hemera has **approved product requirements, an approved architecture,
 and an approved implementation plan**. **Stage 5 (development) is
-approved and in progress** — currently M0 (walking skeleton). Build to
-the approved docs; do not silently change behavior.
+approved and in progress** — M0 (walking skeleton) is complete; M1
+(Today: timeline + scheduling) is next. Build to the approved docs; do
+not silently change behavior.
 
 Approved stage order (each requires user approval before starting):
 
@@ -23,7 +24,8 @@ Approved stage order (each requires user approval before starting):
    `prototype/index.html` is a throwaway mock, not a deliverable.
 4. ✅ Implementation planning → `docs/implementation-plan.md`
    (vertical slices M0–M4, definition of done, §5 open decisions).
-5. ▶️ Development — **in progress (M0)**. Milestones and DoD per
+5. ▶️ Development — **in progress (M1)**. M0 complete (walking
+   skeleton, device-verified). Milestones and DoD per
    `docs/implementation-plan.md`.
 
 ## Confirmed constraints (from product brief §8)
