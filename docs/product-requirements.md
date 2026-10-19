@@ -269,10 +269,14 @@ apply going forward only (H5).
 
 ### 3.4 Quick add (FR-A)
 
-**FR-A1 — FAB.** Present on Today and Habits tabs; opens sheet with
-Task / Habit choice.
-- AC: Task is the default path (one extra tap maximum to reach title
-  input).
+**FR-A1 — FAB.** Present on Today and Habits tabs; opens the sheet in
+the presenting tab's creation mode (Today → Task, Habits → Habit).
+Revised in the M2 device demo: the former Task / Habit choice inside
+the sheet was redundant with the tab — one adaptive `+` scales to
+future tabs.
+- AC: Today's FAB opens the task form with title focused (no
+  intermediate choice); Habits' FAB opens the habit form with name
+  focused.
 
 ### 3.5 Settings (FR-S)
 

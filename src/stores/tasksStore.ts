@@ -4,11 +4,9 @@ import { create } from 'zustand';
 import { getServices } from '@/services';
 import type { NewTaskInput, Task } from '@/domain/types';
 import type { TaskUpdate } from '@/repositories/tasks';
-import { useUiStore } from '@/stores/uiStore';
+import { withWriteError } from '@/lib/writeError';
 
 export type LoadStatus = 'idle' | 'loading' | 'ready' | 'error';
-
-const WRITE_FAILED = "Couldn't save — try again";
 
 interface TasksState {
   status: LoadStatus;
@@ -22,15 +20,6 @@ interface TasksState {
   removeTask: (id: string) => Promise<void>;
   scheduleTomorrow: (id: string) => Promise<void>;
   clearSchedule: (id: string) => Promise<void>;
-}
-
-async function withWriteError<T>(work: Promise<T>): Promise<T> {
-  try {
-    return await work;
-  } catch (error) {
-    useUiStore.getState().showToast({ message: WRITE_FAILED });
-    throw error;
-  }
 }
 
 export const useTasksStore = create<TasksState>((set, get) => ({

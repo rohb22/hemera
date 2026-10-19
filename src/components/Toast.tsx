@@ -1,8 +1,11 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useUiStore } from '@/stores/uiStore';
 import { colors, radii, spacing, type } from '@/theme/tokens';
+
+/** Default bottom-tab content height (design-system §2.6: toast sits above the tab bar). */
+const TAB_BAR_HEIGHT = Platform.OS === 'ios' ? 49 : 56;
 
 export function ToastHost() {
   const insets = useSafeAreaInsets();
@@ -12,7 +15,13 @@ export function ToastHost() {
   if (!toast) return null;
 
   return (
-    <View pointerEvents="box-none" style={[styles.host, { paddingBottom: insets.bottom + spacing.lg }]}>
+    <View
+      pointerEvents="box-none"
+      style={[
+        styles.host,
+        { paddingBottom: insets.bottom + TAB_BAR_HEIGHT + spacing.md },
+      ]}
+    >
       <View style={styles.card}>
         <Text style={styles.message}>{toast.message}</Text>
         {toast.actionLabel ? (

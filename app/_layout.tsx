@@ -120,6 +120,14 @@ export default function RootLayout() {
             name="sheet/task-actions"
             options={{ presentation: 'modal', title: 'Task actions' }}
           />
+          <Stack.Screen
+            name="sheet/habit"
+            options={{ presentation: 'modal', title: 'Habit' }}
+          />
+          <Stack.Screen
+            name="sheet/habit-detail"
+            options={{ presentation: 'modal', title: 'Habit' }}
+          />
         </Stack>
         <ToastHost />
       </SafeAreaProvider>

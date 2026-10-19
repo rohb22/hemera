@@ -116,11 +116,12 @@ date/time math around day edges (use date-fns — see §5).
 
 ---
 
-### M2 — Habits (vertical slice)
+### M2 — Habits (vertical slice) ✅ complete
 
 **Goal:** the full habit loop, on its own tab, guilt-free.
 
-**Scope / FRs:** FR-H1–H5, FR-A1 (habit option), FR-D2 (Habits tab only);
+**Scope / FRs:** FR-H1–H5, FR-A1 (FAB mode follows the tab — revised
+in M2 device demo), FR-D2 (Habits tab only);
 A9, A13→superseded; D1→D11, D2, D5, D6, D7, D10, D11.
 
 **Tasks**
@@ -275,4 +276,7 @@ written until development is explicitly approved.**
 approval. M0 closed (device-verified via Expo Go; typecheck/lint/tests
 green). M1 closed (device-verified: lanes, deadline semantics, reschedule
 flow, Later, quick-add details, live now-marker; 58 tests green). M2
-(Habits) in progress.*
+closed (device-verified: day cells, toggle + undo, skip, detail sheet
+with 4-week grid, archive, adaptive FAB; FR-A1 revised to tab-driven
+quick-add mode; toast repositioned above the tab bar per §2.6; 87 tests
+green). M3 next.*

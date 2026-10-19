@@ -55,7 +55,7 @@ router modals with sheet presentation (ADR-0005).
 | Habit detail | Name, planned days, "this week" summary, last 4 weeks of dots. | FR-H3, A9 |
 | Reschedule sheet | Tomorrow / Pick date / Clear schedule. | FR-T5 |
 | Date picker | Mini calendar respecting week-start; marks today. | FR-T5 |
-| Quick add | Choose Task (default, autofocus) or Habit. | FR-A1 |
+| Quick add | Opens in the presenting tab's mode: Today → Task (autofocus title), Habits → Habit. | FR-A1 (revised, M2) |
 
 ## 4. Today screen
 
