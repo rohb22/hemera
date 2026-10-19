@@ -25,9 +25,9 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#FAF7F2",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200
+          "backgroundColor": "#f4f1e6",
+          "image": "./assets/images/hemera-logo.png",
+          "imageWidth": 96
         }
       ],
       "expo-sqlite",

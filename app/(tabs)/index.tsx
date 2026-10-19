@@ -43,20 +43,20 @@ export default function TodayScreen() {
   return (
     <Screen>
       <View style={styles.header}>
-        <Logo />
-        <View style={styles.headerText}>
-          <Text style={styles.overline}>Today</Text>
-          <Text style={styles.heading}>{formatTodayHeading(now)}</Text>
+        <View style={styles.brandRow}>
+          <Logo size={48} />
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Settings"
+            hitSlop={spacing.sm}
+            onPress={() => router.push('/settings')}
+            style={styles.gear}
+          >
+            <Ionicons name="settings-outline" size={22} color={colors.inkMuted} />
+          </Pressable>
         </View>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Settings"
-          hitSlop={spacing.sm}
-          onPress={() => router.push('/settings')}
-          style={styles.gear}
-        >
-          <Ionicons name="settings-outline" size={22} color={colors.inkMuted} />
-        </Pressable>
+        <Text style={styles.overline}>Today</Text>
+        <Text style={styles.heading}>{formatTodayHeading(now)}</Text>
       </View>
 
       <FlatList
@@ -84,13 +84,16 @@ export default function TodayScreen() {
 
 const styles = StyleSheet.create({
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
     paddingTop: spacing.sm,
     paddingBottom: spacing.lg,
+    gap: spacing.xs,
   },
-  headerText: { flex: 1 },
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: spacing.sm,
+  },
   gear: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
   overline: { ...type.overline, color: colors.inkMuted },
   heading: { ...type.display, color: colors.ink },
