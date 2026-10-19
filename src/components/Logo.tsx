@@ -5,7 +5,7 @@ export function Logo({ size = 28 }: { size?: number }) {
     <Image
       accessibilityRole="image"
       accessibilityLabel="Hemera"
-      source={require('../../assets/images/hemera-logo.png')}
+      source={require('../../assets/images/hemera-mark.png')}
       style={{ width: size, height: size }}
       resizeMode="contain"
     />
