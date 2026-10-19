@@ -2,19 +2,29 @@
 
 ## Project status
 
-Hemera has **approved product requirements** — there is no application
-code yet. Do **not** scaffold frameworks, install dependencies, or
-generate files until the user explicitly approves the implementation
-stage.
+Hemera has **approved product requirements, an approved architecture,
+and an approved implementation plan**. **Stage 5 (development) is
+approved and in progress** — currently M0 (walking skeleton). Build to
+the approved docs; do not silently change behavior.
 
 Approved stage order (each requires user approval before starting):
 
 1. ✅ Product discovery → `docs/product-brief.md`
 2. ✅ Requirements → `docs/product-requirements.md` (source of truth
    for behavior: domain rules, FR IDs, acceptance criteria)
-3. Architecture (Expo structure, SQLite schema, navigation, design tokens)
-4. Implementation planning (milestones, task breakdown)
-5. Development
+3. ✅ Architecture → `docs/ux-design.md`, `docs/design-system.md`,
+   `docs/architecture.md`, `docs/design-decisions/ADR-0001…0011`
+   (Expo structure, SQLite schema, navigation, design tokens; revisions
+   D6–D11 applied — habits are name + state dot only, no habit UI on
+   Today and no horizontal scrolling, compact timeline rail superseding
+   ADR-0001, deadline = date + optional time, habit rows use Mon–Sun
+   day cells with today tap-to-toggle, habits scheduled by weekday rather
+   than a weekly count).
+   `prototype/index.html` is a throwaway mock, not a deliverable.
+4. ✅ Implementation planning → `docs/implementation-plan.md`
+   (vertical slices M0–M4, definition of done, §5 open decisions).
+5. ▶️ Development — **in progress (M0)**. Milestones and DoD per
+   `docs/implementation-plan.md`.
 
 ## Confirmed constraints (from product brief §8)
 
@@ -29,11 +39,15 @@ Approved stage order (each requires user approval before starting):
   streaks, scores, or guilt mechanics anywhere.
 - **Design:** soft editorial / journal-like, light theme, serif
   headings, standard native patterns (bottom tabs, FAB, bottom sheets).
+  **No horizontally scrolling elements anywhere.** Today = compact
+  timeline rail + task pool; habits are a vertical list on the Habits tab
+  only, as name + Mon–Sun day cells, scheduled by weekday (D7, D8, D10,
+  D11).
 
 ## Working agreement
 
 - Read `docs/product-requirements.md` before any behavioral or schema
-  decision (FR IDs, rules T/H/R, decisions D1–D5, assumptions A1–A14);
+  decision (FR IDs, rules T/H/R, decisions D1–D11, assumptions A1–A14);
   `docs/product-brief.md` is the source of truth for vision and scope.
 - Interview-driven workflow: one high-impact question at a time;
   distinguish confirmed / assumed / open; ask for approval before
@@ -47,6 +61,41 @@ Approved stage order (each requires user approval before starting):
 - `README.md` — vision and principles
 - `docs/product-brief.md` — approved product brief (stage 1)
 - `docs/product-requirements.md` — approved requirements (stage 2)
+- `docs/implementation-plan.md` — approved implementation plan (stage 4;
+  milestones M0–M4, open decisions)
+- `assets/images/` — brand assets (`icon.png`, `splash-icon.png`,
+  `hemera-logo.png`); referenced from `app.json`
+- `app/` — Expo Router routes (`app/_layout.tsx`, `app/(tabs)/`,
+  `app/settings.tsx`, `app/sheet/*`)
+- `src/` — components, stores, repositories, `domain/` (pure), `db/`,
+  `theme/`, `lib/`, `services.ts`, `bootstrap.ts`
+- `tests/` — Jest: domain + repository tests (Node env, `node:sqlite`)
+- `prototype/index.html` — throwaway design mock (not a deliverable)
 
-No build, test, or lint tooling exists yet. Commands will be documented
-here once the architecture stage lands.
+## Tooling & commands (M0)
+
+Requires **pnpm** (v12+). `node_modules` is hoisted (`node-linker=hoisted`
+in `.npmrc`); build scripts for `@parcel/watcher` / `unrs-resolver` are
+allow-listed in `pnpm-workspace.yaml`.
+
+- `pnpm install` — install dependencies
+- `pnpm start` — start Metro / Expo dev server
+- `pnpm android` / `pnpm ios` — run a platform
+- `pnpm typecheck` — `tsc --noEmit`
+- `pnpm lint` — `expo lint` (ESLint 9 + `eslint-config-expo`)
+- `pnpm test` — Jest (`jest-expo` preset; `tests/**`)
+
+**How to test without Android Studio:** Expo SDK 58 is the current
+release, so the matching **Expo Go** app from the Play Store / App Store
+runs this project directly. `pnpm start`, then scan the QR with the
+phone (same Wi‑Fi) and run the milestone demo script from
+`docs/implementation-plan.md`.
+
+**`pnpm web` is not a supported test target.** expo-sqlite's web build
+runs SQLite in a web worker that Metro does not serve, so boot hangs
+until the 15 s timeout and the app shows its boot-error screen. Local
+SQLite + phone-only scope (brief §8) means device/emulator is the only
+real target.
+
+DoD gates for every milestone: `pnpm typecheck` + `pnpm lint` +
+`pnpm test` all clean.
