@@ -64,13 +64,18 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (!ready) return;
+    const refreshNow = () => useUiStore.getState().refreshNow();
     const subscription = AppState.addEventListener('change', (state) => {
       if (state === 'active') {
-        useUiStore.getState().refreshNow();
+        refreshNow();
         void useTasksStore.getState().load();
       }
     });
-    return () => subscription.remove();
+    const interval = setInterval(refreshNow, 60_000);
+    return () => {
+      subscription.remove();
+      clearInterval(interval);
+    };
   }, [ready]);
 
   if (!ready) {

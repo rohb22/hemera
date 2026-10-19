@@ -2,7 +2,7 @@ import { addDays, format } from 'date-fns';
 import { create } from 'zustand';
 
 import { getServices } from '@/services';
-import type { Task } from '@/domain/types';
+import type { NewTaskInput, Task } from '@/domain/types';
 import type { TaskUpdate } from '@/repositories/tasks';
 import { useUiStore } from '@/stores/uiStore';
 
@@ -15,7 +15,7 @@ interface TasksState {
   error: string | null;
   tasks: Task[];
   load: () => Promise<void>;
-  createTask: (title: string) => Promise<Task>;
+  createTask: (input: NewTaskInput) => Promise<Task>;
   updateTask: (id: string, patch: TaskUpdate) => Promise<void>;
   completeTask: (id: string) => Promise<Task | null>;
   uncompleteTask: (id: string) => Promise<void>;
@@ -48,8 +48,8 @@ export const useTasksStore = create<TasksState>((set, get) => ({
     }
   },
 
-  async createTask(title) {
-    const task = await withWriteError(getServices().tasks.create({ title }));
+  async createTask(input) {
+    const task = await withWriteError(getServices().tasks.create(input));
     set((state) => ({ tasks: [task, ...state.tasks] }));
     return task;
   },

@@ -1,5 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
-import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import DateTimePicker, {
+  type DateTimePickerChangeEvent,
+  type DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
 import { parseISO } from 'date-fns';
 import { useState } from 'react';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -20,10 +23,12 @@ export function TimeField({ value, onChange }: TimeFieldProps) {
 
   const date = value ? parseISO(`2021-01-01T${value}:00`) : FALLBACK;
 
-  const handleChange = (event: DateTimePickerEvent, picked?: Date) => {
+  const handleValueChange = (_event: DateTimePickerChangeEvent | DateTimePickerEvent, picked: Date) => {
     if (Platform.OS === 'android') setShowAndroid(false);
-    if (event.type === 'set' && picked) onChange(toTimeKey(picked));
+    onChange(toTimeKey(picked));
   };
+
+  const handleDismiss = () => setShowAndroid(false);
 
   const onPress = () => {
     if (Platform.OS === 'android') setShowAndroid(true);
@@ -43,14 +48,20 @@ export function TimeField({ value, onChange }: TimeFieldProps) {
       </Pressable>
 
       {Platform.OS === 'android' && showAndroid && (
-        <DateTimePicker value={date} mode="time" display="clock" onChange={handleChange} />
+        <DateTimePicker
+          value={date}
+          mode="time"
+          display="clock"
+          onValueChange={handleValueChange}
+          onDismiss={handleDismiss}
+        />
       )}
       {Platform.OS !== 'android' && showSpinner && (
         <DateTimePicker
           value={date}
           mode="time"
           display="spinner"
-          onChange={handleChange}
+          onValueChange={handleValueChange}
           style={styles.spinner}
         />
       )}
