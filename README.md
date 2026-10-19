@@ -23,5 +23,6 @@ their time.
 
 ## Status
 
-Early product discovery. Requirements, technical architecture,
-and MVP scope are not finalized yet.
+Product requirements approved (stages 1–2). See
+`docs/product-brief.md` and `docs/product-requirements.md`.
+Architecture and implementation are not started.

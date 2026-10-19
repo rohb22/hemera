@@ -1,6 +1,7 @@
 # Hemera — Product Brief
 
-**Status:** Approved draft (product discovery, stage 1)
+**Status:** Approved (stage 1). Errata applied per
+`docs/product-requirements.md` §12 (stage 2, approved).
 **Tagline:** Your entire life, organized one day at a time.
 
 ## 1. Product Vision
@@ -174,27 +175,25 @@ without migration pain.
 
 ## 10. Unresolved Questions
 
-1. **Habit target model:** per-week frequency ("3×/week"), specific
-   weekdays ("Mon/Wed/Fri"), or both? Recommendation: start with
-   per-week frequency only.
-2. **Overdue rollover policy:** should past-scheduled tasks stay in the
-   pool indefinitely until acted on, or expire after N days? (Recommend:
-   stay, visually de-emphasized with age.)
+1. ~~**Habit target model**~~ **Resolved (stage 2):** per-week
+   frequency only, target 1–7 (requirements D1).
+2. ~~**Overdue rollover policy**~~ **Resolved (stage 2, supersedes the
+   recommendation above):** past-scheduled tasks stay flagged for 7
+   days, then auto-archive to a muted, collapsed *Later* group in the
+   pool (requirements D3).
 3. **Reminder strategy for v1.1:** local notifications for scheduled
    tasks and habit check-ins — timing, opt-in UX.
 4. **Export format:** plain JSON dump vs. human-readable CSV/Markdown —
    matters when backup ships.
-5. **Timeline bounds:** fixed day window (e.g., 6:00–23:00) vs.
-   scrollable 24h; all-day / no-time display treatment.
-6. **Task duration default:** when scheduling a task with a start time
-   but no duration, what renders on the timeline? (Recommend: 30 min
-   default, editable.)
+5. ~~**Timeline bounds**~~ **Resolved (stage 2):** scrollable 24h
+   timeline; auto-scroll to "now" only on the current day (A1).
+6. ~~**Task duration default**~~ **Resolved (stage 2):** 30 min
+   default, editable; min 5 min, max 24 h (A2).
 
 ## 11. Next Stages (approved order)
 
-1. Product discovery (this document).
-2. Requirements deep-dive: habit target semantics, task lifecycle edge
-   cases, acceptance criteria per feature.
+1. ✅ Product discovery (this document).
+2. ✅ Requirements deep-dive → `docs/product-requirements.md`.
 3. Architecture: Expo project structure, SQLite schema, navigation,
    design system tokens.
 4. Implementation planning: milestones, task breakdown.
