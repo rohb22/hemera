@@ -1,11 +1,9 @@
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -30,7 +28,6 @@ export default function QuickAddSheet() {
   const router = useRouter();
   const createTask = useTasksStore((s) => s.createTask);
   const [draft, setDraft] = useState<TaskDraft>(emptyDraft);
-  const [expanded, setExpanded] = useState(false);
   const [errors, setErrors] = useState<TaskDraftErrors>({});
   const [saving, setSaving] = useState(false);
 
@@ -60,67 +57,51 @@ export default function QuickAddSheet() {
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
       >
-        <TextInput
-          autoFocus
-          value={draft.title}
-          onChangeText={(title) => setDraft((d) => ({ ...d, title }))}
-          placeholder="What needs doing?"
-          placeholderTextColor={colors.inkFaint}
-          style={[styles.input, errors.title && styles.inputError]}
-          returnKeyType="done"
-          maxLength={200}
-          onSubmitEditing={save}
-        />
-        {errors.title && <Text style={styles.error}>{errors.title}</Text>}
-
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ expanded }}
-          accessibilityLabel={expanded ? 'Hide details' : 'Add details'}
-          onPress={() => setExpanded((open) => !open)}
-          style={styles.expander}
-        >
-          <Text style={styles.expanderText}>{expanded ? 'Hide details' : 'Add details'}</Text>
-          <Ionicons
-            name={expanded ? 'chevron-up' : 'chevron-down'}
-            size={16}
-            color={colors.accent}
+        <View style={styles.fieldGroup}>
+          <Text style={styles.label}>Title</Text>
+          <TextInput
+            autoFocus
+            value={draft.title}
+            onChangeText={(title) => setDraft((d) => ({ ...d, title }))}
+            placeholder="What needs doing?"
+            placeholderTextColor={colors.inkFaint}
+            style={[styles.input, errors.title && styles.inputError]}
+            returnKeyType="done"
+            maxLength={200}
+            onSubmitEditing={save}
           />
-        </Pressable>
+          {errors.title && <Text style={styles.error}>{errors.title}</Text>}
+        </View>
 
-        {expanded && (
-          <>
-            <ScheduleFields
-              value={{
-                schedDate: draft.schedDate,
-                schedTime: draft.schedTime,
-                durationMin: draft.durationMin,
-                customDuration: draft.customDuration,
-              }}
-              onChange={(next) => setDraft((d) => ({ ...d, ...next }))}
-              errors={errors}
-            />
+        <ScheduleFields
+          value={{
+            schedDate: draft.schedDate,
+            schedTime: draft.schedTime,
+            durationMin: draft.durationMin,
+            customDuration: draft.customDuration,
+          }}
+          onChange={(next) => setDraft((d) => ({ ...d, ...next }))}
+          errors={errors}
+        />
 
-            <DeadlineFields
-              value={{ deadlineDate: draft.deadlineDate, deadlineTime: draft.deadlineTime }}
-              onChange={(next) => setDraft((d) => ({ ...d, ...next }))}
-              errors={errors}
-            />
+        <DeadlineFields
+          value={{ deadlineDate: draft.deadlineDate, deadlineTime: draft.deadlineTime }}
+          onChange={(next) => setDraft((d) => ({ ...d, ...next }))}
+          errors={errors}
+        />
 
-            <View style={styles.fieldGroup}>
-              <Text style={styles.label}>Notes</Text>
-              <TextInput
-                value={draft.notes}
-                onChangeText={(notes) => setDraft((d) => ({ ...d, notes }))}
-                placeholder="Optional details"
-                placeholderTextColor={colors.inkFaint}
-                style={[styles.input, styles.notes]}
-                multiline
-                maxLength={2000}
-              />
-            </View>
-          </>
-        )}
+        <View style={styles.fieldGroup}>
+          <Text style={styles.label}>Notes</Text>
+          <TextInput
+            value={draft.notes}
+            onChangeText={(notes) => setDraft((d) => ({ ...d, notes }))}
+            placeholder="Optional details"
+            placeholderTextColor={colors.inkFaint}
+            style={[styles.input, styles.notes]}
+            multiline
+            maxLength={2000}
+          />
+        </View>
 
         <Button label="Save" onPress={save} disabled={!canSave} />
       </ScrollView>
@@ -133,11 +114,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.paper,
     padding: spacing.xl,
-    gap: spacing.lg,
-    flexGrow: 1,
-    justifyContent: 'center',
+    gap: spacing.xl,
     paddingBottom: spacing.huge,
   },
+  fieldGroup: { gap: spacing.sm },
+  label: { ...type.overline, color: colors.inkMuted },
   input: {
     ...type.body,
     color: colors.ink,
@@ -151,17 +132,5 @@ const styles = StyleSheet.create({
   },
   inputError: { borderColor: colors.attention },
   notes: { minHeight: 88, textAlignVertical: 'top' },
-  fieldGroup: { gap: spacing.sm },
-  label: { ...type.overline, color: colors.inkMuted },
-  expander: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-    alignSelf: 'flex-start',
-    minHeight: 40,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.xs,
-  },
-  expanderText: { ...type.button, color: colors.accent },
   error: { ...type.caption, color: colors.attention },
 });
