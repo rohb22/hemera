@@ -1,6 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
+import { todayKey } from '@/domain/calendar';
+import { useUiStore } from '@/stores/uiStore';
 import { colors } from '@/theme/tokens';
 
 export default function TabsLayout() {
@@ -17,6 +19,14 @@ export default function TabsLayout() {
     >
       <Tabs.Screen
         name="index"
+        listeners={{
+          tabPress: () => {
+            // Tapping the Today tab always returns the view to the current day.
+            if (useUiStore.getState().viewDate !== todayKey(new Date())) {
+              useUiStore.getState().goToday();
+            }
+          },
+        }}
         options={{
           title: 'Today',
           tabBarIcon: ({ focused, size }) => (

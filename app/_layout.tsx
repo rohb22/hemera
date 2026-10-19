@@ -109,6 +109,10 @@ export default function RootLayout() {
             options={{ headerShown: true, title: 'Settings', presentation: 'card' }}
           />
           <Stack.Screen
+            name="archived-habits"
+            options={{ headerShown: true, title: 'Archived habits', presentation: 'card' }}
+          />
+          <Stack.Screen
             name="sheet/quick-add"
             options={{ presentation: 'modal', title: 'New task' }}
           />

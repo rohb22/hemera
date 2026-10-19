@@ -21,12 +21,13 @@ import {
   plannedDayNames,
   progressCaption,
   weekDates,
-  weekStartKey,
+  weekStartFor,
   weeklyProgress,
   type HabitDayState,
 } from '@/domain/habits';
 import type { HabitOccurrence } from '@/domain/types';
 import { useHabitsStore } from '@/stores/habitsStore';
+import { useSettingsStore } from '@/stores/settingsStore';
 import { useUiStore } from '@/stores/uiStore';
 import { colors, radii, spacing, type } from '@/theme/tokens';
 
@@ -46,6 +47,7 @@ export default function HabitDetailSheet() {
   const occurrences = useHabitsStore((s) => s.occurrences);
   const setOccurrence = useHabitsStore((s) => s.setOccurrence);
   const archiveHabit = useHabitsStore((s) => s.archiveHabit);
+  const weekStartsOn = useSettingsStore((s) => s.weekStartsOn);
   const now = useUiStore((s) => s.now);
 
   const today = todayKey(now);
@@ -66,14 +68,14 @@ export default function HabitDetailSheet() {
     );
   }
 
-  const weekStart = weekStartKey(today);
+  const weekStart = weekStartFor(today, weekStartsOn);
   const progress = weeklyProgress(
     habit.daysMask,
     habitOccurrences,
     weekStart,
     toDateKey(new Date(habit.createdAt)),
   );
-  const weekStarts = lastNWeekStarts(today, 4);
+  const weekStarts = lastNWeekStarts(today, 4, weekStartsOn);
 
   const todayRow = habitOccurrences.find((o) => o.date === today);
   const todaySkipped = todayRow?.state === 'skipped';
@@ -113,7 +115,11 @@ export default function HabitDetailSheet() {
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
           <Text style={styles.name}>{habit.name}</Text>
 
           <View style={styles.group}>

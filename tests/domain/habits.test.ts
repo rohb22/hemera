@@ -10,7 +10,7 @@ import {
   plannedOn,
   progressCaption,
   weekDates,
-  weekStartKey,
+  weekStartFor,
   weeklyProgress,
 } from '@/domain/habits';
 import type { OccurrenceState } from '@/domain/types';
@@ -47,11 +47,17 @@ describe('day mask helpers', () => {
   });
 });
 
-describe('week windows (A3 default Monday)', () => {
-  it('starts the window on Monday', () => {
-    expect(weekStartKey('2026-10-21')).toBe('2026-10-19'); // Wed → Mon
-    expect(weekStartKey('2026-10-19')).toBe('2026-10-19'); // Mon → itself
-    expect(weekStartKey('2026-10-25')).toBe('2026-10-19'); // Sun → same Mon
+describe('week windows (A3/FR-S1)', () => {
+  it('starts the window on Monday by default', () => {
+    expect(weekStartFor('2026-10-21')).toBe('2026-10-19'); // Wed → Mon
+    expect(weekStartFor('2026-10-19')).toBe('2026-10-19'); // Mon → itself
+    expect(weekStartFor('2026-10-25')).toBe('2026-10-19'); // Sun → same Mon
+  });
+
+  it('starts the window on Sunday when configured', () => {
+    expect(weekStartFor('2026-10-21', 0)).toBe('2026-10-18'); // Wed → Sun
+    expect(weekStartFor('2026-10-18', 0)).toBe('2026-10-18'); // Sun → itself
+    expect(weekStartFor('2026-10-25', 0)).toBe('2026-10-25'); // Sun → itself
   });
 
   it('lists the seven dates and the last n weeks, newest first', () => {
@@ -70,6 +76,10 @@ describe('week windows (A3 default Monday)', () => {
       '2026-10-05',
       '2026-09-28',
     ]);
+  });
+
+  it('shifts the window with the week-start setting', () => {
+    expect(lastNWeekStarts('2026-10-21', 2, 0)).toEqual(['2026-10-18', '2026-10-11']);
   });
 });
 

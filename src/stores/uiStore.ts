@@ -1,5 +1,8 @@
 import { create } from 'zustand';
 
+import { toDateKey, todayKey } from '@/domain/calendar';
+import { addDaysKey } from '@/domain/habits';
+
 export interface Toast {
   id: number;
   message: string;
@@ -17,8 +20,13 @@ interface ShowToastInput {
 
 interface UiState {
   now: Date;
+  /** Date key currently viewed on Today (date navigation, D4/FR-D2). */
+  viewDate: string;
   toast: Toast | null;
   refreshNow: () => void;
+  setViewDate: (dateKey: string) => void;
+  shiftViewDate: (deltaDays: number) => void;
+  goToday: () => void;
   showToast: (input: ShowToastInput) => void;
   dismissToast: () => void;
 }
@@ -28,10 +36,23 @@ let timer: ReturnType<typeof setTimeout> | null = null;
 
 export const useUiStore = create<UiState>((set) => ({
   now: new Date(),
+  viewDate: toDateKey(new Date()),
   toast: null,
 
   refreshNow() {
     set({ now: new Date() });
+  },
+
+  setViewDate(dateKey) {
+    set({ viewDate: dateKey });
+  },
+
+  shiftViewDate(deltaDays) {
+    set((s) => ({ viewDate: addDaysKey(s.viewDate, deltaDays) }));
+  },
+
+  goToday() {
+    set({ viewDate: todayKey(new Date()) });
   },
 
   showToast(input) {

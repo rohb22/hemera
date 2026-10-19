@@ -3,8 +3,9 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { HabitDayCells } from '@/components/HabitDayCells';
 import { toDateKey } from '@/domain/calendar';
-import { progressCaption, weekStartKey, weeklyProgress } from '@/domain/habits';
+import { progressCaption, weekStartFor, weeklyProgress } from '@/domain/habits';
 import type { Habit, HabitOccurrence } from '@/domain/types';
+import { useSettingsStore } from '@/stores/settingsStore';
 import { colors, spacing, type } from '@/theme/tokens';
 
 interface HabitRowProps {
@@ -24,10 +25,17 @@ export function HabitRow({
   onPress,
   onToggleToday,
 }: HabitRowProps) {
+  const weekStartsOn = useSettingsStore((s) => s.weekStartsOn);
+
   const progress = useMemo(
     () =>
-      weeklyProgress(habit.daysMask, occurrences, weekStartKey(todayKey), toDateKey(new Date(habit.createdAt))),
-    [habit, occurrences, todayKey],
+      weeklyProgress(
+        habit.daysMask,
+        occurrences,
+        weekStartFor(todayKey, weekStartsOn),
+        toDateKey(new Date(habit.createdAt)),
+      ),
+    [habit, occurrences, todayKey, weekStartsOn],
   );
 
   const handleCellPress = (dateKey: string, editable: boolean) => {

@@ -155,7 +155,7 @@ history kept.
 
 ---
 
-### M3 — Past-day navigation + Settings
+### M3 — Past-day navigation + Settings ✅ complete
 
 **Goal:** reach any past day with full edit; minimal settings.
 
@@ -178,7 +178,7 @@ archive then restore a habit.
 
 ---
 
-### M3.5 — Dependency & tooling decisions (small, do before/within M0–M3)
+### M3.5 — Dependency & tooling decisions (small, do before/within M0–M3) ✅ complete
 
 Resolve the open stage-3 proposals (see §5). Each is a written decision
 (ADR or a line in the relevant doc) before its milestone closes.
@@ -227,14 +227,14 @@ default.
 | 2 | Date lib | `date-fns` (tree-shakeable, no tz db) | M0 — resolved |
 | 3 | Repository test strategy | **Resolved (M0): Node built-in `node:sqlite` in-memory (no native build step)** | M0 — resolved |
 | 4 | Migration runner design | **Resolved (M0): numbered migration modules (SQL as exported string) + `schema_migrations` table (forward-only)** | M0 — resolved |
-| 5 | `now` snapshot | `now` in `uiStore`, refreshed on AppState resume | M1 |
-| 6 | Timeline layout | compact rail w/ node + time per task (ADR-0009, D8) | M1 |
+| 5 | `now` snapshot | **Resolved (M1): `now` in `uiStore`, ticked every 60 s + refreshed on AppState resume** | M1 — resolved |
+| 6 | Timeline layout | **Resolved (M1): compact rail with node + own start time per task** (ADR-0009, D8) | M1 — resolved |
 | 7 | Undo window | 5 s toast | M0 — resolved |
 | 8 | Overlap lanes | **Resolved (M1): side-by-side equal lanes** — overlapping tasks split the block width into equal columns (design-system.md; A7 still: no conflict UI) | M1 — resolved |
-| 9 | Date/time pickers | custom mini-calendar + native time wheel | M1 |
-| 10 | Settings entry | header gear (not a tab) | M3 |
+| 9 | Date/time pickers | **Resolved (M1): custom mini-calendar + native time wheel** (`@react-native-community/datetimepicker`, `onValueChange`/`onDismiss`) | M1 — resolved |
+| 10 | Settings entry | **Resolved (M3): header gear → pushed Settings screen** (week start, Archived habits sub-screen per ux-design §2, export placeholder) | M3 — resolved |
 | 11 | Color/type values | as specified in `design-system.md` | M0 — resolved |
-| 12 | First-run copy | as specified in `ux-design.md` §6 | M3 |
+| 12 | First-run copy | **Resolved (M3): "A quiet start" panel with two CTAs** (ux-design §6) | M3 — resolved |
 | 13 | In-app logo placement | small mark, top-left of Today header (brand assets provided) | M0 — resolved |
 | 14 | Package manager | **Resolved (M0): pnpm (hoisted node_modules via `node-linker=hoisted`; build scripts allow-listed in `pnpm-workspace.yaml`)** | M0 — resolved |
 
@@ -279,4 +279,9 @@ flow, Later, quick-add details, live now-marker; 58 tests green). M2
 closed (device-verified: day cells, toggle + undo, skip, detail sheet
 with 4-week grid, archive, adaptive FAB; FR-A1 revised to tab-driven
 quick-add mode; toast repositioned above the tab bar per §2.6; 87 tests
-green). M3 next.*
+green). M3 closed (device-verified: ‹ › day navigation + Today pill and
+Today-tab reset, past-day editing, no now-line past, week-start setting
+(Mon/Sun) re-deriving habit windows (A3), Archived habits sub-screen with
+restore (FR-S2), export placeholder (FR-S3), first-run/empty/error/
+loading states, native scroll indicators hidden app-wide; 103 tests
+green). M3.5 closed (§5 stage-3 decisions all resolved). M4 next.*

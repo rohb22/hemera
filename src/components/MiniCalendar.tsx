@@ -14,6 +14,7 @@ import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { toDateKey } from '@/domain/calendar';
+import { useSettingsStore } from '@/stores/settingsStore';
 import { colors, fontFamily, hitTarget, radii, spacing, type } from '@/theme/tokens';
 
 interface MiniCalendarProps {
@@ -21,16 +22,20 @@ interface MiniCalendarProps {
   onSelect: (dateKey: string) => void;
 }
 
-const WEEKDAY_LETTERS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+const MONDAY_LETTERS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+const SUNDAY_LETTERS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 export function MiniCalendar({ selected, onSelect }: MiniCalendarProps) {
+  const weekStartsOn = useSettingsStore((s) => s.weekStartsOn);
   const [month, setMonth] = useState(() => startOfMonth(new Date()));
 
   const days = useMemo(() => {
-    const start = startOfWeek(startOfMonth(month), { weekStartsOn: 1 });
-    const end = endOfWeek(endOfMonth(month), { weekStartsOn: 1 });
+    const start = startOfWeek(startOfMonth(month), { weekStartsOn });
+    const end = endOfWeek(endOfMonth(month), { weekStartsOn });
     return eachDayOfInterval({ start, end });
-  }, [month]);
+  }, [month, weekStartsOn]);
+
+  const weekdayLetters = weekStartsOn === 1 ? MONDAY_LETTERS : SUNDAY_LETTERS;
 
   const selectedDate = selected ? new Date(`${selected}T00:00:00`) : null;
   const today = new Date();
@@ -60,7 +65,7 @@ export function MiniCalendar({ selected, onSelect }: MiniCalendarProps) {
       </View>
 
       <View style={styles.weekRow}>
-        {WEEKDAY_LETTERS.map((letter, index) => (
+        {weekdayLetters.map((letter, index) => (
           <Text key={`${letter}-${index}`} style={styles.weekday}>
             {letter}
           </Text>

@@ -8,4 +8,4 @@ export const toTimeKey = (date: Date): string => format(date, TIME_KEY_FORMAT);
 
 export const todayKey = (now: Date): string => toDateKey(now);
 
-export const formatTodayHeading = (date: Date): string => format(date, 'EEEE, MMMM d');
+export const formatDayHeading = (date: Date): string => format(date, 'EEEE, MMMM d');

@@ -15,6 +15,9 @@ export const DAY_NAMES = [
 ] as const;
 export const ALL_DAYS_MASK = 127;
 
+/** Week-start day for display windows (A3/FR-S1): 1 = Monday (default), 0 = Sunday. */
+export type WeekStartsOn = 0 | 1;
+
 /** Mon-first day indexes: 0 = Monday … 6 = Sunday (bits of habits.days_mask). */
 export function maskFromDayIndexes(indexes: number[]): number {
   let mask = 0;
@@ -44,9 +47,9 @@ export function addDaysKey(dateKey: string, days: number): string {
   return toDateKey(addDays(parseISO(dateKey), days));
 }
 
-/** Evaluation window start (A3 default: Monday; the setting lands in M3). */
-export function weekStartKey(dateKey: string): string {
-  return toDateKey(startOfWeek(parseISO(dateKey), { weekStartsOn: 1 }));
+/** Evaluation window start (A3/FR-S1: setting-driven, default Monday). */
+export function weekStartFor(dateKey: string, weekStartsOn: WeekStartsOn = 1): string {
+  return toDateKey(startOfWeek(parseISO(dateKey), { weekStartsOn }));
 }
 
 export function weekDates(startKey: string): string[] {
@@ -54,8 +57,12 @@ export function weekDates(startKey: string): string[] {
 }
 
 /** Week-start keys for the last n weeks, newest first. */
-export function lastNWeekStarts(dateKey: string, n: number): string[] {
-  const current = weekStartKey(dateKey);
+export function lastNWeekStarts(
+  dateKey: string,
+  n: number,
+  weekStartsOn: WeekStartsOn = 1,
+): string[] {
+  const current = weekStartFor(dateKey, weekStartsOn);
   return Array.from({ length: n }, (_, index) => addDaysKey(current, -7 * index));
 }
 

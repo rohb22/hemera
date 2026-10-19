@@ -11,10 +11,14 @@ interface HabitsState {
   error: string | null;
   habits: Habit[];
   occurrences: HabitOccurrence[];
+  archived: Habit[];
+  archivedError: string | null;
   load: () => Promise<void>;
+  loadArchived: () => Promise<void>;
   createHabit: (input: NewHabitInput) => Promise<Habit>;
   updateHabit: (id: string, patch: HabitUpdate) => Promise<void>;
   archiveHabit: (id: string) => Promise<void>;
+  restoreHabit: (id: string) => Promise<void>;
   setOccurrence: (habitId: string, dateKey: string, state: OccurrenceState) => Promise<void>;
 }
 
@@ -33,6 +37,8 @@ export const useHabitsStore = create<HabitsState>((set, get) => ({
   error: null,
   habits: [],
   occurrences: [],
+  archived: [],
+  archivedError: null,
 
   async load() {
     set({ status: get().status === 'ready' ? 'ready' : 'loading', error: null });
@@ -67,6 +73,30 @@ export const useHabitsStore = create<HabitsState>((set, get) => ({
     set((state) => ({
       habits: state.habits.filter((h) => h.id !== id),
       occurrences: state.occurrences.filter((o) => o.habitId !== id),
+    }));
+  },
+
+  async loadArchived() {
+    try {
+      const archived = await getServices().habits.listArchived();
+      set({ archived, archivedError: null });
+    } catch (error) {
+      set({
+        archivedError: error instanceof Error ? error.message : 'Unknown error',
+      });
+    }
+  },
+
+  async restoreHabit(id) {
+    await withWriteError(getServices().habits.restore(id));
+    const habit = await getServices().habits.getById(id);
+    set((state) => ({
+      archived: state.archived.filter((h) => h.id !== id),
+      habits: habit
+        ? [...state.habits.filter((h) => h.id !== id), habit].sort(
+            (a, b) => b.createdAt - a.createdAt,
+          )
+        : state.habits,
     }));
   },
 

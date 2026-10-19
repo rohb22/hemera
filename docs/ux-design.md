@@ -65,7 +65,8 @@ router modals with sheet presentation (ADR-0005).
    (~64 pt, user-tuned — stage 5), serif display of weekday + date
    ("Tuesday, October 20"),
    ‹ › day controls flanking it, a quiet *Today* pill when viewing today
-   (tapping it returns to today from any past day), gear icon top-right.
+   (tapping it returns to today from any past day; tapping the *Today*
+   tab in the bottom nav does the same), gear icon top-right.
 2. **Timeline — compact rail (D8).** A single vertical rail down the
    left; one node per scheduled task in chronological order, each node
    showing its own start time (e.g. "13:00") and a block whose weight

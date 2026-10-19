@@ -101,6 +101,7 @@ export default function QuickAddSheet() {
         <ScrollView
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
           {activeMode === 'task' ? (
             <>

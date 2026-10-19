@@ -2,6 +2,7 @@ import { addDays, format } from 'date-fns';
 
 import type { NewTaskInput, Task } from '@/domain/types';
 import type { HabitsRepository } from '@/repositories/habits';
+import type { SettingsRepository } from '@/repositories/settings';
 import type { TasksRepository } from '@/repositories/tasks';
 import { setServices } from '@/services';
 import { useTasksStore } from '@/stores/tasksStore';
@@ -54,6 +55,7 @@ beforeEach(() => {
   setServices({
     tasks: repo as unknown as TasksRepository,
     habits: {} as HabitsRepository,
+    settings: {} as SettingsRepository,
   });
   useTasksStore.setState({ status: 'idle', error: null, tasks: [] });
   useUiStore.getState().dismissToast();

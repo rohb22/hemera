@@ -5,9 +5,10 @@
 Hemera has **approved product requirements, an approved architecture,
 and an approved implementation plan**. **Stage 5 (development) is
 approved and in progress** — M0 (walking skeleton), M1 (Today:
-timeline + scheduling) and M2 (Habits) are complete; M3 (past-day
-navigation + Settings) is next. Build to the approved docs; do not
-silently change behavior.
+timeline + scheduling), M2 (Habits) and M3 (past-day navigation +
+Settings) are complete, and M3.5 (§5 tooling/dependency decisions) is
+closed; M4 (polish, hardening, beta) is next. Build to the approved
+docs; do not silently change behavior.
 
 Approved stage order (each requires user approval before starting):
 
@@ -25,10 +26,10 @@ Approved stage order (each requires user approval before starting):
    `prototype/index.html` is a throwaway mock, not a deliverable.
 4. ✅ Implementation planning → `docs/implementation-plan.md`
    (vertical slices M0–M4, definition of done, §5 open decisions).
-5. ▶️ Development — **in progress (M3)**. M0 (walking skeleton), M1
-   (Today: timeline + scheduling) and M2 (Habits) complete, all
-   device-verified. Milestones and DoD per
-   `docs/implementation-plan.md`.
+5. ▶️ Development — **in progress (M4)**. M0 (walking skeleton), M1
+   (Today: timeline + scheduling), M2 (Habits) and M3 (past-day
+   navigation + Settings) complete, all device-verified; M3.5 closed.
+   Milestones and DoD per `docs/implementation-plan.md`.
 
 ## Confirmed constraints (from product brief §8)
 
@@ -70,7 +71,7 @@ Approved stage order (each requires user approval before starting):
 - `assets/images/` — brand assets (`icon.png`, `splash-icon.png`,
   `hemera-logo.png`); referenced from `app.json`
 - `app/` — Expo Router routes (`app/_layout.tsx`, `app/(tabs)/`,
-  `app/settings.tsx`, `app/sheet/*`)
+  `app/settings.tsx`, `app/archived-habits.tsx`, `app/sheet/*`)
 - `src/` — components, stores, repositories, `domain/` (pure), `db/`,
   `theme/`, `lib/`, `services.ts`, `bootstrap.ts`
 - `tests/` — Jest: domain + repository tests (Node env, `node:sqlite`)

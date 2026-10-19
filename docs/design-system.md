@@ -157,6 +157,9 @@ never carry state alone (paired with color/shape/label).
 - DON'T add counts, percentages, streaks, or scores (H4, principles).
 - DO keep one accent; if a screen needs a second emphasis, it's
   probably two screens.
+- DO hide native scroll indicators app-wide (`showsVerticalScrollIndicator
+  = false`): on curved-edge phones the platform scrollbar hugs the glass
+  and is hard to reach; rely on content/overscroll cues instead.
 - DON'T use shadows on cards; borders and whitespace only.
 - DO leave at least one "quiet zone" (16 pt empty) around section
   headers.
