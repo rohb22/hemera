@@ -77,7 +77,7 @@ tabs; store↔DB write path.
 
 ---
 
-### M1 — Today: timeline + scheduling
+### M1 — Today: timeline + scheduling ✅ complete
 
 **Goal:** plan a day on the timeline and have the app survive a broken
 plan.
@@ -273,4 +273,6 @@ written until development is explicitly approved.**
 
 *Approved (stage 4). Stage 5 (development) began after explicit
 approval. M0 closed (device-verified via Expo Go; typecheck/lint/tests
-green); M1 in progress.*
+green). M1 closed (device-verified: lanes, deadline semantics, reschedule
+flow, Later, quick-add details, live now-marker; 58 tests green). M2
+(Habits) in progress.*
