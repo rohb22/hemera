@@ -85,11 +85,16 @@ allow-listed in `pnpm-workspace.yaml`.
 - `pnpm lint` — `expo lint` (ESLint 9 + `eslint-config-expo`)
 - `pnpm test` — Jest (`jest-expo` preset; `tests/**`)
 
-**How to test without Android Studio:** Expo SDK 58 is the current
-release, so the matching **Expo Go** app from the Play Store / App Store
-runs this project directly. `pnpm start`, then scan the QR with the
-phone (same Wi‑Fi) and run the milestone demo script from
-`docs/implementation-plan.md`.
+**How to test without Android Studio:** this project is pinned to
+**Expo SDK 57** (`expo@~57.0.30`), because that is the SDK the Play
+Store **Expo Go** build currently ships. Do not bump to SDK 58 until
+the Play Store build matches — Expo Go rejects mismatched projects. The
+matching Expo Go app from the Play Store / App Store runs this project
+directly. `pnpm start`, then scan the QR with the phone (same Wi‑Fi)
+and run the milestone demo script from `docs/implementation-plan.md`.
+When Play Store Expo Go moves to SDK 58, the upgrade is
+`pnpm add expo@~58 && pnpm expo install --fix` (plus aligning
+`jest-expo` / `eslint-config-expo`) — then re-run the gates.
 
 **`pnpm web` is not a supported test target.** expo-sqlite's web build
 runs SQLite in a web worker that Metro does not serve, so boot hangs

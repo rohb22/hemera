@@ -65,8 +65,8 @@ flagged **needs rescheduling** — neutrally, with a one-tap "move to
 tomorrow." Nothing is auto-deleted or auto-rolled without user action.
 
 ### J5 — Habit check-in
-From the Today habit strip or Habits tab → mark today's occurrence done,
-skip, or leave it. History accumulates; targets are evaluated over a
+From the Habits tab → mark today's occurrence done,
+skip, or leave it. History accumulates; planned days are evaluated over a
 flexible period, not a brittle daily streak.
 
 ## 5. MVP Scope
@@ -76,8 +76,8 @@ flexible period, not a brittle daily streak.
 | Area | Capability |
 | --- | --- |
 | Tasks | Create/edit/complete/delete. Optional deadline (date). Optional scheduled time block (date + start time + duration). Notes optional-simple. |
-| Today | Date navigation. Clock timeline showing scheduled tasks for the day. Task pool: unscheduled tasks + past-scheduled tasks flagged "needs rescheduling" + tasks due today. Compact habit check-in strip. |
-| Habits | Create/edit/complete. Flexible targets (e.g., "3× per week"). Daily occurrences with states: done, missed, skipped. Full history preserved. |
+| Today | Date navigation. Clock timeline showing scheduled tasks for the day. Task pool: unscheduled tasks + past-scheduled tasks flagged "needs rescheduling" + tasks due today. No habit UI (habits belong to the Habits tab). |
+| Habits | Create/edit/complete. Planned weekdays (e.g., Mon/Wed/Fri), completable on any day. Daily occurrences with states: done, missed, skipped. Full history preserved. |
 | Habits tab | List of habits with recent completion patterns and today's status. |
 | Quick add | FAB on every screen → task or habit. |
 | Settings | Minimal: week start day, data export placeholder (disabled or JSON dump). |
@@ -110,16 +110,17 @@ never un-completed automatically. Overdue or past-scheduled open tasks
 surface in the pool flagged *needs rescheduling*.
 
 ### Habit
-Recurring behavior with a **flexible target** (e.g., "3× per week")
-rather than a daily binary. Each day generates an *occurrence* with a
-neutral state: done, missed, or skipped. Missed occurrences are never
-deleted and never break the record; there is no streak counter. Hitting
-the weekly target is celebrated with quiet feedback, not gamification.
+Recurring behavior with **planned weekdays** (e.g., Mon/Wed/Fri) rather
+than a daily binary or a weekly count. Each day generates an *occurrence*
+with a neutral state: done, missed, or skipped. Missed occurrences are
+never deleted and never break the record; there is no streak counter.
+Completing a habit's planned days for the week is acknowledged with quiet
+feedback, not gamification.
 
 ### Recurrence rule (applies to habits in MVP)
 Habit → generates daily occurrences → each occurrence has independent
 completion state. History = the immutable log of occurrences. Editing a
-habit's target affects future evaluation only, never past records.
+habit's planned days affects future evaluation only, never past records.
 
 ### Not-yet concepts (design must not preclude them)
 - **Event:** time + duration anchor, no completion semantics.
@@ -150,7 +151,7 @@ without migration pain.
 2. **Platform:** mobile-first native via **React Native / Expo**
    (developer preference).
 3. **Today interaction model:** timeline + task pool with user-driven
-   time-blocking; habits as a compact strip.
+   time-blocking; habits live on their own tab (revised stage 3, D7).
 4. **MVP scope:** tasks + Today + habits only (see §5).
 5. **Data:** local-only, no accounts, no sync; schema versioning and a
    future export/sync path designed in from day one.
@@ -163,8 +164,10 @@ without migration pain.
 
 ## 9. Assumptions
 
-- Habit strip on Today shows today's status for all active habits,
-  scrollable if long.
+- ~~Habit strip on Today shows today's status for all active habits,
+  scrollable if long.~~ **Resolved (stage 3, requirements D7):** no
+  habit UI on Today and no horizontal scrolling anywhere; habits are a
+  vertical list on the Habits tab.
 - Time-blocked tasks render on the timeline in chronological order;
   tasks without a time never appear on the timeline, only in the pool.
 - "Needs rescheduling" is a derived state (computed from dates), not a
@@ -175,8 +178,10 @@ without migration pain.
 
 ## 10. Unresolved Questions
 
-1. ~~**Habit target model**~~ **Resolved (stage 2):** per-week
-   frequency only, target 1–7 (requirements D1).
+1. ~~**Habit target model**~~ **Resolved (stage 2; revised stage 4):** a
+   per-week frequency target 1–7 (requirements D1) was replaced by a set
+   of planned weekdays (D11) — the scheduled form is a Mon–Sun day
+   picker, not a "×/week" count.
 2. ~~**Overdue rollover policy**~~ **Resolved (stage 2, supersedes the
    recommendation above):** past-scheduled tasks stay flagged for 7
    days, then auto-archive to a muted, collapsed *Later* group in the

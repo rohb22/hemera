@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hemera — UI prototype (not the app)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAF7F2; --surface:#FFFFFF; --muted:#F2EDE5;
+  --ink:#2A2622; --ink-muted:#6E655B; --ink-faint:#9A9187;
+  --hairline:#E5DED3; --accent:#5B6B54; --accent-soft:#E8EDE4;
+  --attention:#8A6D3B; --attention-soft:#F3EBDC; --danger:#8C3A2E;
+  --serif: "Fraunces", Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: var(--sans); background: #E7E1D7; color: #2A2622; }
+.page { display: flex; min-height: 100vh; }
+
+.panel { width: 320px; flex: 0 0 320px; background: #FAF7F2; border-right: 1px solid #E5DED3; padding: 28px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+.panel h1 { font-family: var(--serif); font-weight: 500; font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.panel .sub { font-size: 13px; line-height: 1.5; color: #6E655B; margin: 0 0 20px; }
+.panel .hint { font-size: 12px; color: #9A9187; margin-top: 20px; line-height: 1.5; }
+nav { display: flex; flex-direction: column; gap: 4px; }
+nav button { text-align: left; font: 600 14px/1.2 var(--sans); color: #2A2622; background: transparent; border: 1px solid transparent; border-radius: 10px; padding: 12px 14px; cursor: pointer; }
+nav button:hover { background: #F2EDE5; }
+nav button.active { background: #E8EDE4; border-color: #5B6B54; color: #3F4A3A; }
+
+.stage { flex: 1; display: grid; place-items: center; padding: 48px 32px; }
+.device { width: 390px; height: 844px; background: #2A2622; border-radius: 56px; padding: 10px; box-shadow: 0 30px 70px rgba(42,38,34,0.35); }
+.screen-shell { position: relative; width: 100%; height: 100%; background: var(--paper); border-radius: 46px; overflow: hidden; display: flex; flex-direction: column; }
+.statusbar { flex: 0 0 40px; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; font-size: 13px; font-weight: 600; color: #2A2622; }
+.statusbar .right { letter-spacing: 1px; font-size: 12px; }
+
+.app { position: relative; flex: 1; overflow: hidden; }
+
+.screen { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--paper); }
+.screen.active { display: flex; }
+.scroll { flex: 1; overflow-y: auto; overflow-x: hidden; }
+
+.topbar { display: grid; grid-template-columns: 40px 1fr 40px 40px; align-items: center; gap: 4px; padding: 6px 16px 10px; }
+.iconbtn { width: 40px; height: 40px; border: none; background: transparent; border-radius: 999px; font-size: 20px; color: #2A2622; cursor: pointer; line-height: 1; }
+.iconbtn:hover { background: #F2EDE5; }
+.dateline { min-width: 0; }
+.dateline .display { font-family: var(--serif); font-weight: 500; font-size: 28px; line-height: 1.05; letter-spacing: -0.01em; }
+.dateline .datesub { font-size: 13px; color: #6E655B; display: inline-flex; align-items: center; gap: 8px; margin-top: 2px; }
+.pill-today { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #3F4A3A; background: #E8EDE4; border-radius: 999px; padding: 3px 9px; }
+
+.timeline-wrap { padding: 0 16px; }
+.timeline { background: #FFFFFF; border: 1px solid #E5DED3; border-radius: 16px; padding: 6px 14px 6px 0; }
+.rail { position: relative; padding: 4px 0; }
+.rail::before { content: ""; position: absolute; left: 52px; top: 14px; bottom: 14px; width: 2px; border-radius: 2px; background: #E5DED3; }
+.rrow { position: relative; display: grid; grid-template-columns: 44px 1fr; gap: 14px; padding: 9px 0; align-items: start; }
+.rrow .rtime { text-align: right; font: 500 12px var(--sans); color: #9A9187; padding-top: 8px; }
+.rrow .rdot { position: absolute; left: 52px; top: 15px; margin-left: -4px; width: 10px; height: 10px; border-radius: 999px; background: #FFFFFF; border: 2px solid #5B6B54; box-sizing: border-box; }
+.rrow.deadline .rdot { border-color: #8A6D3B; }
+.rblock { background: #FFFFFF; border: 1px solid #DED6C9; border-radius: 12px; padding: 8px 10px; }
+.rblock.long { padding: 13px 10px; }
+.rblock .bt { font: 600 13px var(--sans); color: #2A2622; }
+.rblock .btime { font-size: 11px; color: #6E655B; margin-top: 1px; }
+.rblock.done { border-left: 3px solid #5B6B54; }
+.rblock.deadline { background: #F3EBDC; border-color: #E4D6BB; border-left: 3px solid #8A6D3B; }
+.rrow.now .rtime { color: #3F4A3A; font-weight: 700; }
+.rrow.now .rdot { background: #5B6B54; border-color: #5B6B54; }
+.rrow.now .rline { height: 2px; border-radius: 2px; background: #5B6B54; margin-top: 15px; }
+.tl-empty { padding: 34px 24px; text-align: center; font-size: 14px; color: #9A9187; }
+
+.pool { padding: 4px 16px 120px; }
+.section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #9A9187; margin: 22px 0 6px; display: flex; justify-content: space-between; align-items: center; }
+.disclosure { width: 100%; background: transparent; border: none; padding: 0; cursor: pointer; }
+.caret { color: #9A9187; font-size: 13px; }
+
+.row { position: relative; display: grid; grid-template-columns: 44px 1fr auto; align-items: start; gap: 4px; padding: 10px 0; border-bottom: 1px solid #E5DED3; }
+.row:last-child { border-bottom: none; }
+.check { width: 44px; height: 44px; margin: -6px 0 0 -6px; border: none; background: transparent; cursor: pointer; display: grid; place-items: center; }
+.check span { width: 22px; height: 22px; border-radius: 999px; border: 1.5px solid #CFC6B8; display: grid; place-items: center; color: transparent; font-size: 13px; font-weight: 700; }
+.check.done span { background: #5B6B54; border-color: #5B6B54; color: #FFFFFF; }
+.row .title { font-size: 16px; line-height: 22px; color: #2A2622; padding-top: 3px; }
+.row.done .title { color: #9A9187; }
+.row .caption { font-size: 13px; line-height: 18px; color: #6E655B; margin-top: 2px; }
+.row--attention .title { font-weight: 600; }
+.row .caption.warn { color: #8A6D3B; }
+.row--attention::before { content: ""; position: absolute; left: -16px; top: 12px; bottom: 12px; width: 3px; border-radius: 2px; background: #8A6D3B; }
+.quick { border: 1px solid #E5DED3; background: #FFFFFF; color: #3F4A3A; font: 600 12px var(--sans); border-radius: 999px; padding: 7px 12px; cursor: pointer; margin-top: 2px; }
+.row--later { border-bottom: none; background: #F2EDE5; border-radius: 12px; padding: 12px; margin: 6px 0; opacity: 0.72; }
+.row.hidden { display: none; }
+
+.first-run { text-align: center; padding: 26px 28px 30px; }
+.first-run h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin: 0 0 6px; }
+.first-run p { font-size: 14px; line-height: 1.5; color: #6E655B; margin: 0 0 18px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 22px; border-radius: 999px; font: 600 16px var(--sans); cursor: pointer; border: 1px solid transparent; }
+.btn.primary { background: #5B6B54; color: #FFFFFF; }
+.btn.secondary { background: transparent; border-color: #E5DED3; color: #2A2622; }
+.btn.block { width: 100%; }
+.btn + .btn { margin-top: 10px; }
+
+.habit-row { padding: 14px 0; border-bottom: 1px solid #E5DED3; }
+.habit-row:last-child { border-bottom: none; }
+.habit-row .habit-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; cursor: pointer; }
+.habit-name { font-size: 16px; font-weight: 600; }
+.habit-meta { font-size: 12px; color: #9A9187; }
+.dcells { display: flex; gap: 8px; margin-top: 10px; }
+.dcell { width: 28px; display: flex; flex-direction: column; align-items: center; gap: 5px; background: none; border: none; padding: 0; }
+.dcell .dow { font: 600 10px var(--sans); color: #9A9187; letter-spacing: 0.03em; }
+.dcell i { width: 14px; height: 14px; border-radius: 999px; border: 1.5px solid #E5DED3; box-sizing: border-box; }
+.dcell.done i { background: #5B6B54; border-color: #5B6B54; }
+.dcell.skipped i { border-color: #6E655B; }
+.dcell.missed i { width: 8px; height: 8px; background: #CFC6B8; border: none; margin: 3px 0; }
+.dcell.today { cursor: pointer; }
+.dcell.today .dow { color: #3F4A3A; }
+.dcell.today i { border-color: #6E655B; }
+.dcell.today { cursor: pointer; }
+.dcell.today .dow { color: #3F4A3A; }
+.dcell.today i { border-color: #6E655B; }
+.dcell.planned i { border-color: #DED6C9; }
+.dcell.unplanned i { border-color: #EFEAE2; }
+.dcell.unplanned .dow { color: #C9C0B2; }
+.dcell.future i { border-color: #EFEAE2; }
+.habit-met { color: #3F4A3A; }
+
+.tabbar { flex: 0 0 58px; display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid #E5DED3; background: #FAF7F2; }
+.tabbar button { border: none; background: transparent; font: 600 12px var(--sans); color: #9A9187; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+.tabbar button.active { color: #3F4A3A; }
+.tabbar button .glyph { font-size: 16px; }
+
+.fab { position: absolute; right: 18px; bottom: 76px; width: 56px; height: 56px; border-radius: 999px; border: none; background: #5B6B54; color: #FFFFFF; font-size: 26px; line-height: 1; cursor: pointer; box-shadow: 0 8px 20px rgba(42,38,34,0.28); }
+.fab.on-empty { bottom: 76px; }
+
+.scrim { position: absolute; inset: 0; background: rgba(42,38,34,0.32); opacity: 0; pointer-events: none; transition: opacity 180ms ease-out; }
+.scrim.show { opacity: 1; pointer-events: auto; }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; background: #FFFFFF; border-radius: 20px 20px 0 0; padding: 10px 20px 22px; transform: translateY(102%); transition: transform 220ms ease-out; max-height: 88%; overflow-y: auto; box-shadow: 0 -4px 24px rgba(42,38,34,0.10); }
+.sheet.show { transform: translateY(0); }
+.grab { width: 40px; height: 4px; border-radius: 999px; background: #E5DED3; margin: 2px auto 12px; }
+.sheet h3 { font-family: var(--serif); font-weight: 500; font-size: 20px; margin: 0 0 14px; }
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #9A9187; margin-bottom: 6px; }
+.field input, .field textarea { width: 100%; border: 1px solid #E5DED3; background: #F2EDE5; border-radius: 10px; padding: 12px 14px; font: 400 16px var(--sans); color: #2A2622; }
+.field textarea { min-height: 64px; resize: none; }
+.field input:focus, .field textarea:focus { outline: 2px solid #5B6B54; outline-offset: 0; background: #FFFFFF; }
+.value-row { display: flex; align-items: center; justify-content: space-between; background: #F2EDE5; border-radius: 10px; padding: 12px 14px; font-size: 16px; }
+.value-row .val { color: #2A2622; }
+.value-row .val.muted { color: #9A9187; }
+.value-row .val small { display: block; font-size: 12px; color: #6E655B; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.pchip { border: 1px solid #E5DED3; background: #FFFFFF; border-radius: 999px; padding: 8px 14px; font: 600 14px var(--sans); color: #2A2622; cursor: pointer; }
+.pchip.sel { background: #E8EDE4; border-color: #5B6B54; color: #3F4A3A; }
+.helper { font-size: 12px; color: #9A9187; margin-top: 8px; line-height: 1.45; }
+.sheet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+.sheet-actions.single { grid-template-columns: 1fr; }
+.btn.danger { background: transparent; color: #8C3A2E; font-weight: 600; }
+.option { display: flex; justify-content: space-between; align-items: center; width: 100%; text-align: left; background: transparent; border: none; border-bottom: 1px solid #E5DED3; padding: 16px 2px; font: 400 16px var(--sans); color: #2A2622; cursor: pointer; }
+.option:last-of-type { border-bottom: none; }
+.option .sub { font-size: 12px; color: #9A9187; margin-top: 2px; }
+.link-danger { display: inline-block; margin-top: 6px; color: #8C3A2E; font: 600 14px var(--sans); background: none; border: none; padding: 0; cursor: pointer; }
+
+.toast { position: absolute; left: 50%; bottom: 84px; transform: translate(-50%, 12px); background: #2A2622; color: #FAF7F2; border-radius: 999px; padding: 12px 16px 12px 20px; display: flex; align-items: center; gap: 16px; font-size: 14px; opacity: 0; pointer-events: none; transition: all 200ms ease-out; z-index: 6; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.toast button { background: none; border: none; color: #C9D3C3; font: 700 14px var(--sans); cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <aside class="panel">
+    <h1>Hemera</h1>
+    <p class="sub">UI prototype with mock data — a throwaway preview. Not connected to the production app, no Expo, no dependencies.</p>
+    <nav id="nav">
+      <button data-screen="today" class="active">Today — planned day</button>
+      <button data-screen="today-empty">Today — empty state</button>
+      <button data-screen="needs">Task needs rescheduling</button>
+      <button data-screen="habits">Habits</button>
+      <button data-screen="task-sheet">Task create / edit sheet</button>
+      <button data-screen="habit-sheet">Habit create / edit sheet</button>
+    </nav>
+    <p class="hint">Follows docs/design-system.md and docs/ux-design.md. Timeline, checks, habit states, Later, and sheets are interactive.</p>
+  </aside>
+
+  <main class="stage">
+    <div class="device">
+      <div class="screen-shell">
+        <div class="statusbar"><span>14:20</span><span class="right">▮▮▮</span></div>
+        <div class="app" id="app">
+
+          <!-- TODAY -->
+          <section class="screen active" id="screen-today">
+            <div class="scroll">
+              <div class="topbar">
+                <button class="iconbtn" aria-label="Previous day">‹</button>
+                <div class="dateline">
+                  <div class="display">Tuesday</div>
+                  <div class="datesub">October 20 <span class="pill-today">Today</span></div>
+                </div>
+                <button class="iconbtn" aria-label="Next day">›</button>
+                <button class="iconbtn" aria-label="Settings">⚙</button>
+              </div>
+
+              <div class="timeline-wrap">
+                <div class="timeline" id="timeline">
+                  <div class="rail" id="rail"></div>
+                </div>
+              </div>
+
+              <div class="pool">
+                <div class="section-label">Needs rescheduling</div>
+                <div class="row" id="resched-row">
+                  <button class="check" aria-label="Complete Call the dentist"><span>✓</span></button>
+                  <div><div class="title">Call the dentist</div><div class="caption">Was scheduled Mon, Oct 19 · 16:00</div></div>
+                  <button class="quick" id="quick-tomorrow">Tomorrow</button>
+                </div>
+
+                <div class="section-label">Due today</div>
+                <div class="row row--attention">
+                  <button class="check" aria-label="Complete Submit expense report"><span>✓</span></button>
+                  <div><div class="title">Submit expense report</div><div class="caption" style="color:#8A6D3B;">Due today</div></div>
+                  <span></span>
+                </div>
+
+                <div class="section-label">Unscheduled</div>
+                <div class="row">
+                  <button class="check" aria-label="Complete Read chapter 3"><span>✓</span></button>
+                  <div><div class="title">Read chapter 3</div></div><span></span>
+                </div>
+                <div class="row">
+                  <button class="check" aria-label="Complete Buy birthday card"><span>✓</span></button>
+                  <div><div class="title">Buy birthday card</div></div><span></span>
+                </div>
+
+                <button class="disclosure" id="later-toggle"><div class="section-label">Later · 2 <span class="caret" id="later-caret">⌄</span></div></button>
+                <div id="later-list" style="display:none;">
+                  <div class="row row-later">
+                    <button class="check" aria-label="Complete Return library books"><span>✓</span></button>
+                    <div><div class="title">Return library books</div><div class="caption">Was scheduled Oct 10</div></div><span></span>
+                  </div>
+                  <div class="row row-later">
+                    <button class="check" aria-label="Complete Renew gym membership"><span>✓</span></button>
+                    <div><div class="title">Renew gym membership</div><div class="caption">Was scheduled Oct 9</div></div><span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tabbar">
+              <button class="active"><span class="glyph">◔</span>Today</button>
+              <button onclick="go('habits')"><span class="glyph">◡</span>Habits</button>
+            </div>
+            <button class="fab" aria-label="Quick add" onclick="openSheet('task')">+</button>
+          </section>
+
+          <!-- TODAY EMPTY -->
+          <section class="screen" id="screen-today-empty">
+            <div class="scroll">
+              <div class="topbar">
+                <button class="iconbtn" aria-label="Previous day">‹</button>
+                <div class="dateline">
+                  <div class="display">Tuesday</div>
+                  <div class="datesub">October 20 <span class="pill-today">Today</span></div>
+                </div>
+                <button class="iconbtn" aria-label="Next day">›</button>
+                <button class="iconbtn" aria-label="Settings">⚙</button>
+              </div>
+              <div class="timeline-wrap">
+                <div class="timeline"><div class="tl-empty">Nothing scheduled</div></div>
+              </div>
+              <div class="first-run">
+                <h3>A calm place for your day</h3>
+                <p>Tasks, habits, and time — together, one day at a time.</p>
+                <button class="btn primary block" onclick="openSheet('task')">Add your first task</button>
+                <button class="btn secondary block" onclick="openSheet('habit')">Create a habit</button>
+              </div>
+            </div>
+            <div class="tabbar">
+              <button class="active"><span class="glyph">◔</span>Today</button>
+              <button onclick="go('habits')"><span class="glyph">◡</span>Habits</button>
+            </div>
+            <button class="fab on-empty" aria-label="Quick add" onclick="openSheet('task')">+</button>
+          </section>
+
+          <!-- HABITS -->
+          <section class="screen" id="screen-habits">
+            <div class="scroll">
+              <div style="padding:10px 20px 6px;">
+                <div class="display" style="font-family:var(--serif);font-weight:500;font-size:28px;">Habits</div>
+                <div class="datesub" style="font-size:13px;color:#6E655B;margin-top:2px;">This week · Mon, Oct 19 – Sun, Oct 25</div>
+              </div>
+              <div style="padding:6px 20px 120px;">
+                <div class="habit-row" data-target="7">
+                  <div class="habit-top" onclick="openSheet('habit')">
+                    <div class="habit-name">Meditate</div>
+                    <div class="habit-meta">2 of 7 this week</div>
+                  </div>
+                  <div class="dcells">
+                    <div class="dcell done planned"><span class="dow">M</span><i></i></div>
+                    <button class="dcell done today planned" data-today><span class="dow">T</span><i></i></button>
+                    <div class="dcell future planned"><span class="dow">W</span><i></i></div>
+                    <div class="dcell future planned"><span class="dow">T</span><i></i></div>
+                    <div class="dcell future planned"><span class="dow">F</span><i></i></div>
+                    <div class="dcell future planned"><span class="dow">S</span><i></i></div>
+                    <div class="dcell future planned"><span class="dow">S</span><i></i></div>
+                  </div>
+                </div>
+                <div class="habit-row" data-target="3">
+                  <div class="habit-top" onclick="openSheet('habit')">
+                    <div class="habit-name">Water</div>
+                    <div class="habit-meta">2 of 3 this week</div>
+                  </div>
+                  <div class="dcells">
+                    <div class="dcell done planned"><span class="dow">M</span><i></i></div>
+                    <button class="dcell done today" data-today><span class="dow">T</span><i></i></button>
+                    <div class="dcell future planned"><span class="dow">W</span><i></i></div>
+                    <div class="dcell future unplanned"><span class="dow">T</span><i></i></div>
+                    <div class="dcell future planned"><span class="dow">F</span><i></i></div>
+                    <div class="dcell future unplanned"><span class="dow">S</span><i></i></div>
+                    <div class="dcell future unplanned"><span class="dow">S</span><i></i></div>
+                  </div>
+                </div>
+                <div class="habit-row" data-target="3">
+                  <div class="habit-top" onclick="openSheet('habit')">
+                    <div class="habit-name">Read</div>
+                    <div class="habit-meta">1 of 3 this week</div>
+                  </div>
+                  <div class="dcells">
+                    <div class="dcell done planned"><span class="dow">M</span><i></i></div>
+                    <button class="dcell skipped today" data-today><span class="dow">T</span><i></i></button>
+                    <div class="dcell future planned"><span class="dow">W</span><i></i></div>
+                    <div class="dcell future unplanned"><span class="dow">T</span><i></i></div>
+                    <div class="dcell future planned"><span class="dow">F</span><i></i></div>
+                    <div class="dcell future unplanned"><span class="dow">S</span><i></i></div>
+                    <div class="dcell future unplanned"><span class="dow">S</span><i></i></div>
+                  </div>
+                </div>
+                <div class="habit-row" data-target="1">
+                  <div class="habit-top" onclick="openSheet('habit')">
+                    <div class="habit-name">Tidy desk</div>
+                    <div class="habit-meta"><span class="habit-met">target met</span> · 1 of 1 this week</div>
+                  </div>
+                  <div class="dcells">
+                    <div class="dcell done planned"><span class="dow">M</span><i></i></div>
+                    <button class="dcell today unplanned" data-today><span class="dow">T</span><i></i></button>
+                    <div class="dcell future unplanned"><span class="dow">W</span><i></i></div>
+                    <div class="dcell future unplanned"><span class="dow">T</span><i></i></div>
+                    <div class="dcell future unplanned"><span class="dow">F</span><i></i></div>
+                    <div class="dcell future unplanned"><span class="dow">S</span><i></i></div>
+                    <div class="dcell future unplanned"><span class="dow">S</span><i></i></div>
+                  </div>
+                </div>
+                <div class="habit-row" data-target="5">
+                  <div class="habit-top" onclick="openSheet('habit')">
+                    <div class="habit-name">Stretch</div>
+                    <div class="habit-meta">1 of 5 this week</div>
+                  </div>
+                  <div class="dcells">
+                    <div class="dcell done planned"><span class="dow">M</span><i></i></div>
+                    <button class="dcell today planned" data-today><span class="dow">T</span><i></i></button>
+                    <div class="dcell future planned"><span class="dow">W</span><i></i></div>
+                    <div class="dcell future planned"><span class="dow">T</span><i></i></div>
+                    <div class="dcell future planned"><span class="dow">F</span><i></i></div>
+                    <div class="dcell future unplanned"><span class="dow">S</span><i></i></div>
+                    <div class="dcell future unplanned"><span class="dow">S</span><i></i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tabbar">
+              <button onclick="go('today')"><span class="glyph">◔</span>Today</button>
+              <button class="active"><span class="glyph">◡</span>Habits</button>
+            </div>
+            <button class="fab" aria-label="Add habit" onclick="openSheet('habit')">+</button>
+          </section>
+
+          <!-- OVERLAYS -->
+          <div class="scrim" id="scrim" onclick="closeSheets()"></div>
+
+          <div class="sheet" id="sheet-task">
+            <div class="grab"></div>
+            <h3>Edit task</h3>
+            <div class="field">
+              <label>Title</label>
+              <input value="Call the dentist">
+            </div>
+            <div class="field">
+              <label>Notes</label>
+              <textarea placeholder="Add notes…">Ask about the Monday appointment.</textarea>
+            </div>
+            <div class="field">
+              <label>Deadline</label>
+              <div class="value-row"><span class="val">Wed, Oct 21 <small>17:00</small></span><span>›</span></div>
+              <div class="helper">Time is optional — without it, due by end of day.</div>
+            </div>
+            <div class="field">
+              <label>Scheduled</label>
+              <div class="value-row">
+                <span class="val">Mon, Oct 19 <small>16:00 · 30 min</small></span><span>›</span>
+              </div>
+              <div class="chips" style="margin-top:8px;">
+                <button class="pchip">15</button>
+                <button class="pchip sel">30</button>
+                <button class="pchip">60</button>
+                <button class="pchip">90</button>
+              </div>
+            </div>
+            <div class="sheet-actions">
+              <button class="btn secondary" onclick="closeSheets()">Cancel</button>
+              <button class="btn primary" onclick="saveSheet('Task saved')">Save</button>
+            </div>
+            <button class="link-danger">Delete task…</button>
+          </div>
+
+          <div class="sheet" id="sheet-habit">
+            <div class="grab"></div>
+            <h3>Edit habit</h3>
+            <div class="field">
+              <label>Name</label>
+              <input value="Meditate">
+            </div>
+            <div class="field">
+              <label>Planned days</label>
+              <div class="chips" data-multi>
+                <button class="pchip sel">M</button>
+                <button class="pchip sel">T</button>
+                <button class="pchip sel">W</button>
+                <button class="pchip sel">T</button>
+                <button class="pchip sel">F</button>
+                <button class="pchip sel">S</button>
+                <button class="pchip sel">S</button>
+              </div>
+              <div class="helper">Pick the days you plan to do it — you can still complete any day. No streaks, no penalties.</div>
+            </div>
+            <div class="field">
+              <label>Today</label>
+              <div class="chips">
+                <button class="pchip">Skip today</button>
+              </div>
+              <div class="helper">Only today can be changed; past days are read-only.</div>
+            </div>
+            <div class="sheet-actions">
+              <button class="btn secondary" onclick="closeSheets()">Cancel</button>
+              <button class="btn primary" onclick="saveSheet('Habit saved')">Save</button>
+            </div>
+            <button class="link-danger">Archive habit (history is kept)</button>
+          </div>
+
+          <div class="sheet" id="sheet-reschedule">
+            <div class="grab"></div>
+            <h3>Reschedule</h3>
+            <div style="font-size:14px;color:#6E655B;margin:-6px 0 8px;">Call the dentist — was scheduled Mon, Oct 19 · 16:00</div>
+            <button class="option" onclick="closeSheets()"><span>Tomorrow<div class="sub">Tue, Oct 21 · 16:00</div></span><span>›</span></button>
+            <button class="option" onclick="closeSheets()"><span>Pick a date &amp; time…</span><span>›</span></button>
+            <button class="option" onclick="closeSheets()"><span>Clear schedule<div class="sub">Keeps it in the pool, deadline untouched</div></span><span>›</span></button>
+            <div class="sheet-actions single" style="margin-top:14px;">
+              <button class="btn secondary" onclick="closeSheets()">Cancel</button>
+            </div>
+          </div>
+
+          <div class="toast" id="toast"><span id="toast-text">Marked done</span><button id="toast-action">Undo</button></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const NOW = { h: 14, m: 20 };
+const blocks = [
+  { start: "09:00", dur: 30, title: "Team standup" },
+  { start: "11:00", dur: 60, title: "Draft weekly update", done: true },
+  { start: "14:00", dur: 30, title: "Water plants" },
+  { start: "18:30", dur: 60, title: "Evening walk" }
+];
+
+const toMinutes = (t) => {
+  const [h, m] = t.split(":").map(Number);
+  return h * 60 + m;
+};
+const fmtTime = (mins) =>
+  String(Math.floor(mins / 60)).padStart(2, "0") + ":" + String(mins % 60).padStart(2, "0");
+
+const rail = document.getElementById("rail");
+const nowMin = NOW.h * 60 + NOW.m;
+const ordered = blocks.slice().sort((a, b) => toMinutes(a.start) - toMinutes(b.start));
+let nowInserted = false;
+
+function buildRow(b) {
+  const row = document.createElement("div");
+  row.className = "rrow";
+  const time = document.createElement("div");
+  time.className = "rtime";
+  time.textContent = b.start;
+  const block = document.createElement("div");
+  block.className = "rblock" + (b.done ? " done" : "") + (b.dur > 60 ? " long" : "");
+  const title = document.createElement("div");
+  title.className = "bt";
+  title.textContent = b.title;
+  const meta = document.createElement("div");
+  meta.className = "btime";
+  meta.textContent = b.start + "–" + fmtTime(toMinutes(b.start) + b.dur);
+  block.appendChild(title);
+  block.appendChild(meta);
+  const dot = document.createElement("span");
+  dot.className = "rdot";
+  row.appendChild(time);
+  row.appendChild(block);
+  row.appendChild(dot);
+  return row;
+}
+
+function buildNowRow() {
+  const row = document.createElement("div");
+  row.className = "rrow now";
+  const time = document.createElement("div");
+  time.className = "rtime";
+  time.textContent = "now";
+  const line = document.createElement("div");
+  line.className = "rline";
+  const dot = document.createElement("span");
+  dot.className = "rdot";
+  row.appendChild(time);
+  row.appendChild(line);
+  row.appendChild(dot);
+  return row;
+}
+
+ordered.forEach((b) => {
+  if (!nowInserted && toMinutes(b.start) >= nowMin) {
+    rail.appendChild(buildNowRow());
+    nowInserted = true;
+  }
+  rail.appendChild(buildRow(b));
+});
+if (!nowInserted) rail.appendChild(buildNowRow());
+
+function updateHabitMeta(row) {
+  const target = Number(row.dataset.target || 7);
+  const done = row.querySelectorAll(".dcell.done").length;
+  const meta = row.querySelector(".habit-meta");
+  if (!meta) return;
+  const met = done >= target;
+  meta.innerHTML =
+    (met ? '<span class="habit-met">target met</span> · ' : "") +
+    done + " of " + target + " this week";
+}
+
+document.querySelectorAll(".dcell[data-today]").forEach((cell) => {
+  cell.addEventListener("click", () => {
+    const row = cell.closest(".habit-row");
+    const wasDone = cell.classList.contains("done");
+    cell.classList.toggle("done", !wasDone);
+    cell.classList.toggle("today", wasDone);
+    updateHabitMeta(row);
+  });
+});
+
+const toast = document.getElementById("toast");
+const toastAction = document.getElementById("toast-action");
+let toastTimer = null;
+
+function hideToast() {
+  toast.classList.remove("show");
+}
+
+function showToast(message, undo) {
+  document.getElementById("toast-text").textContent = message;
+  toastAction.style.display = undo ? "inline" : "none";
+  toastAction.onclick = () => {
+    if (undo) undo();
+    hideToast();
+  };
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(hideToast, 5000);
+}
+
+document.querySelectorAll(".check").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const row = btn.closest(".row");
+    const wasDone = btn.classList.contains("done");
+    btn.classList.toggle("done", !wasDone);
+    const titleEl = row.querySelector(".title");
+    if (titleEl) titleEl.style.color = wasDone ? "" : "#6E655B";
+    showToast(wasDone ? "Marked open" : "Marked done", () => {
+      btn.classList.toggle("done", wasDone);
+      if (titleEl) titleEl.style.color = wasDone ? "#6E655B" : "";
+    });
+  });
+});
+
+
+
+document.getElementById("later-toggle").addEventListener("click", () => {
+  const list = document.getElementById("later-list");
+  const open = list.style.display === "block";
+  list.style.display = open ? "none" : "block";
+  document.getElementById("later-caret").textContent = open ? "⌄" : "⌃";
+});
+
+const sheets = { task: "sheet-task", habit: "sheet-habit", reschedule: "sheet-reschedule" };
+function openSheet(name) {
+  closeSheets();
+  document.getElementById(sheets[name]).classList.add("show");
+  document.getElementById("scrim").classList.add("show");
+}
+function closeSheets() {
+  Object.values(sheets).forEach((id) => document.getElementById(id).classList.remove("show"));
+  document.getElementById("scrim").classList.remove("show");
+}
+function saveSheet(message) {
+  closeSheets();
+  showToast(message, null);
+}
+
+function go(name) {
+  closeSheets();
+  document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
+  document.querySelectorAll("#nav button").forEach((b) => b.classList.toggle("active", b.dataset.screen === name));
+  if (name === "today" || name === "needs" || name === "task-sheet") {
+    document.getElementById("screen-today").classList.add("active");
+  } else if (name === "today-empty") {
+    document.getElementById("screen-today-empty").classList.add("active");
+  } else if (name === "habits" || name === "habit-sheet") {
+    document.getElementById("screen-habits").classList.add("active");
+  }
+  if (name === "task-sheet") openSheet("task");
+  if (name === "habit-sheet") openSheet("habit");
+  if (name === "needs") {
+    const row = document.getElementById("resched-row");
+    row.scrollIntoView({ block: "start", behavior: "auto" });
+    openSheet("reschedule");
+  }
+}
+
+document.querySelectorAll("#nav button").forEach((b) => {
+  b.addEventListener("click", () => go(b.dataset.screen));
+});
+
+document.querySelectorAll(".pchip").forEach((chip) => {
+  chip.addEventListener("click", () => {
+    if (chip.parentElement.dataset.multi !== undefined) {
+      chip.classList.toggle("sel");
+      return;
+    }
+    chip.parentElement.querySelectorAll(".pchip").forEach((c) => c.classList.remove("sel"));
+    chip.classList.add("sel");
+  });
+});
+</script>
+</body>
+</html>

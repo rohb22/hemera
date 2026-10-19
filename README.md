@@ -23,6 +23,12 @@ their time.
 
 ## Status
 
-Product requirements approved (stages 1–2). See
-`docs/product-brief.md` and `docs/product-requirements.md`.
-Architecture and implementation are not started.
+Product brief, requirements, architecture, and the implementation plan
+are approved (stages 1–4). See `docs/product-brief.md`,
+`docs/product-requirements.md`, `docs/ux-design.md`,
+`docs/design-system.md`, `docs/architecture.md`, and
+`docs/implementation-plan.md`. Development (stage 5) has not started —
+it begins only once explicitly approved.
+
+`prototype/index.html` is a throwaway interactive mock used during
+architecture — it is not part of the product.
