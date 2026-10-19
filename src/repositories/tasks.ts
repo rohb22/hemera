@@ -41,6 +41,26 @@ export interface TasksRepositoryDeps {
   now?: () => number;
 }
 
+export interface TaskUpdate {
+  title?: string;
+  notes?: string;
+  deadlineDate?: string | null;
+  deadlineTime?: string | null;
+  scheduledDate?: string | null;
+  startTime?: string | null;
+  durationMin?: number | null;
+}
+
+const UPDATE_COLUMNS: Record<keyof TaskUpdate, string> = {
+  title: 'title',
+  notes: 'notes',
+  deadlineDate: 'deadline_date',
+  deadlineTime: 'deadline_time',
+  scheduledDate: 'scheduled_date',
+  startTime: 'start_time',
+  durationMin: 'duration_min',
+};
+
 export type TasksRepository = ReturnType<typeof createTasksRepository>;
 
 export function createTasksRepository(db: SqlExecutor, deps: TasksRepositoryDeps = {}) {
@@ -90,13 +110,27 @@ export function createTasksRepository(db: SqlExecutor, deps: TasksRepositoryDeps
       return rows[0] ? mapTask(rows[0]) : null;
     },
 
-    async listPool(): Promise<Task[]> {
+    async listOpen(): Promise<Task[]> {
       const rows = await db.all<TaskRow>(
         `SELECT ${COLUMNS} FROM tasks
-         WHERE status = 'open' AND scheduled_date IS NULL
+         WHERE status = 'open'
          ORDER BY created_at DESC`,
       );
       return rows.map(mapTask);
+    },
+
+    async update(id: string, patch: TaskUpdate): Promise<void> {
+      const sets: string[] = [];
+      const params: (string | number | null)[] = [];
+      for (const [key, column] of Object.entries(UPDATE_COLUMNS) as [keyof TaskUpdate, string][]) {
+        if (key in patch) {
+          sets.push(`${column} = ?`);
+          params.push(patch[key] ?? null);
+        }
+      }
+      if (sets.length === 0) return;
+      params.push(id);
+      await db.run(`UPDATE tasks SET ${sets.join(', ')} WHERE id = ?`, params);
     },
 
     async complete(id: string, completedAt: number): Promise<void> {

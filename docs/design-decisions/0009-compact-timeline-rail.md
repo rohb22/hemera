@@ -10,8 +10,10 @@ tasks are*, not from empty hours.
 hairline spine with one node per scheduled task, in chronological order,
 each labelled with its own start time (e.g. "13:00") and a block whose
 weight hints at duration. Empty stretches collapse to spacing — no
-per-hour rows, no fixed hourly scale. Overlaps share a node's lane(s).
-A soft now-marker sits between nodes on today.
+per-hour rows, no fixed hourly scale. **Overlaps render as side-by-side
+equal lanes** (resolved M1, plan §5 #8): overlapping tasks split the
+block width into equal columns — the rail stays compact and there is
+still no conflict UI (A7). A soft now-marker sits between nodes on today.
 **Consequences:** The whole page can be one scroll again (no nested
 scroller) — simpler and more consistent with the journal feel. Losing
 proportional time height means gaps aren't visually to scale (accepted,

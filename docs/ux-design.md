@@ -61,8 +61,9 @@ router modals with sheet presentation (ADR-0005).
 
 ### 4.1 Zones (top → bottom, single page scroll — FR-D1)
 
-1. **Date header** (fixed): small `hemera-logo.png` mark top-left
-   (~28 pt), serif display of weekday + date ("Tuesday, October 20"),
+1. **Date header** (fixed): trimmed `hemera-mark.png` logo top-left
+   (~64 pt, user-tuned — stage 5), serif display of weekday + date
+   ("Tuesday, October 20"),
    ‹ › day controls flanking it, a quiet *Today* pill when viewing today
    (tapping it returns to today from any past day), gear icon top-right.
 2. **Timeline — compact rail (D8).** A single vertical rail down the

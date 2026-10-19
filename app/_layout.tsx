@@ -2,12 +2,14 @@ import { Fraunces_500Medium, useFonts } from '@expo-google-fonts/fraunces';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
+import { AppState, StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { StyleSheet, Text, View } from 'react-native';
 
 import { bootstrap } from '@/bootstrap';
 import { ToastHost } from '@/components/Toast';
+import { useTasksStore } from '@/stores/tasksStore';
+import { useUiStore } from '@/stores/uiStore';
 import { colors, fontFamily, spacing, type } from '@/theme/tokens';
 
 void SplashScreen.preventAutoHideAsync();
@@ -60,6 +62,17 @@ export default function RootLayout() {
     }
   }, [ready]);
 
+  useEffect(() => {
+    if (!ready) return;
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        useUiStore.getState().refreshNow();
+        void useTasksStore.getState().load();
+      }
+    });
+    return () => subscription.remove();
+  }, [ready]);
+
   if (!ready) {
     return null;
   }
@@ -93,6 +106,14 @@ export default function RootLayout() {
           <Stack.Screen
             name="sheet/quick-add"
             options={{ presentation: 'modal', title: 'New task' }}
+          />
+          <Stack.Screen
+            name="sheet/task"
+            options={{ presentation: 'modal', title: 'Edit task' }}
+          />
+          <Stack.Screen
+            name="sheet/task-actions"
+            options={{ presentation: 'modal', title: 'Task actions' }}
           />
         </Stack>
         <ToastHost />

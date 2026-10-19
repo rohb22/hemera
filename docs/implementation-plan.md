@@ -229,7 +229,7 @@ default.
 | 5 | `now` snapshot | `now` in `uiStore`, refreshed on AppState resume | M1 |
 | 6 | Timeline layout | compact rail w/ node + time per task (ADR-0009, D8) | M1 |
 | 7 | Undo window | 5 s toast | M0 — resolved |
-| 8 | Overlap lanes | side-by-side equal lanes (A7) vs stacked | M1 |
+| 8 | Overlap lanes | **Resolved (M1): side-by-side equal lanes** — overlapping tasks split the block width into equal columns (design-system.md; A7 still: no conflict UI) | M1 — resolved |
 | 9 | Date/time pickers | custom mini-calendar + native time wheel | M1 |
 | 10 | Settings entry | header gear (not a tab) | M3 |
 | 11 | Color/type values | as specified in `design-system.md` | M0 — resolved |

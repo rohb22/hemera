@@ -32,7 +32,8 @@
       ],
       "expo-sqlite",
       "expo-font",
-      "expo-status-bar"
+      "expo-status-bar",
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true
