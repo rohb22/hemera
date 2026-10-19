@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/PrimaryButton';
 import { DeadlineFields } from '@/components/DeadlineFields';
@@ -49,67 +50,70 @@ export default function QuickAddSheet() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.flex}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView edges={['top']} style={styles.safe}>
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <View style={styles.fieldGroup}>
-          <Text style={styles.label}>Title</Text>
-          <TextInput
-            autoFocus
-            value={draft.title}
-            onChangeText={(title) => setDraft((d) => ({ ...d, title }))}
-            placeholder="What needs doing?"
-            placeholderTextColor={colors.inkFaint}
-            style={[styles.input, errors.title && styles.inputError]}
-            returnKeyType="done"
-            maxLength={200}
-            onSubmitEditing={save}
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Title</Text>
+            <TextInput
+              autoFocus
+              value={draft.title}
+              onChangeText={(title) => setDraft((d) => ({ ...d, title }))}
+              placeholder="What needs doing?"
+              placeholderTextColor={colors.inkFaint}
+              style={[styles.input, errors.title && styles.inputError]}
+              returnKeyType="done"
+              maxLength={200}
+              onSubmitEditing={save}
+            />
+            {errors.title && <Text style={styles.error}>{errors.title}</Text>}
+          </View>
+
+          <ScheduleFields
+            value={{
+              schedDate: draft.schedDate,
+              schedTime: draft.schedTime,
+              durationMin: draft.durationMin,
+              customDuration: draft.customDuration,
+            }}
+            onChange={(next) => setDraft((d) => ({ ...d, ...next }))}
+            errors={errors}
           />
-          {errors.title && <Text style={styles.error}>{errors.title}</Text>}
-        </View>
 
-        <ScheduleFields
-          value={{
-            schedDate: draft.schedDate,
-            schedTime: draft.schedTime,
-            durationMin: draft.durationMin,
-            customDuration: draft.customDuration,
-          }}
-          onChange={(next) => setDraft((d) => ({ ...d, ...next }))}
-          errors={errors}
-        />
-
-        <DeadlineFields
-          value={{ deadlineDate: draft.deadlineDate, deadlineTime: draft.deadlineTime }}
-          onChange={(next) => setDraft((d) => ({ ...d, ...next }))}
-          errors={errors}
-        />
-
-        <View style={styles.fieldGroup}>
-          <Text style={styles.label}>Notes</Text>
-          <TextInput
-            value={draft.notes}
-            onChangeText={(notes) => setDraft((d) => ({ ...d, notes }))}
-            placeholder="Optional details"
-            placeholderTextColor={colors.inkFaint}
-            style={[styles.input, styles.notes]}
-            multiline
-            maxLength={2000}
+          <DeadlineFields
+            value={{ deadlineDate: draft.deadlineDate, deadlineTime: draft.deadlineTime }}
+            onChange={(next) => setDraft((d) => ({ ...d, ...next }))}
+            errors={errors}
           />
-        </View>
 
-        <Button label="Save" onPress={save} disabled={!canSave} />
-      </ScrollView>
-    </KeyboardAvoidingView>
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Notes</Text>
+            <TextInput
+              value={draft.notes}
+              onChangeText={(notes) => setDraft((d) => ({ ...d, notes }))}
+              placeholder="Optional details"
+              placeholderTextColor={colors.inkFaint}
+              style={[styles.input, styles.notes]}
+              multiline
+              maxLength={2000}
+            />
+          </View>
+
+          <Button label="Save" onPress={save} disabled={!canSave} />
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: colors.paper },
   flex: { flex: 1 },
   container: {
     backgroundColor: colors.paper,

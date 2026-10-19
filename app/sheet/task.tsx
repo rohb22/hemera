@@ -9,6 +9,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/PrimaryButton';
 import { DeadlineFields } from '@/components/DeadlineFields';
@@ -38,10 +39,12 @@ export default function TaskSheet() {
 
   if (!task) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.missing}>This task is no longer available.</Text>
-        <Button label="Close" variant="secondary" onPress={() => router.back()} />
-      </View>
+      <SafeAreaView edges={['top']} style={styles.safe}>
+        <View style={styles.missingContainer}>
+          <Text style={styles.missing}>This task is no longer available.</Text>
+          <Button label="Close" variant="secondary" onPress={() => router.back()} />
+        </View>
+      </SafeAreaView>
     );
   }
 
@@ -60,62 +63,70 @@ export default function TaskSheet() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.flex}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <View style={styles.fieldGroup}>
-          <Text style={styles.label}>Title</Text>
-          <TextInput
-            value={draft.title}
-            onChangeText={(title) => setDraft((d) => ({ ...d, title }))}
-            placeholder="What needs doing?"
-            placeholderTextColor={colors.inkFaint}
-            style={[styles.input, errors.title && styles.inputError]}
-            maxLength={200}
+    <SafeAreaView edges={['top']} style={styles.safe}>
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Title</Text>
+            <TextInput
+              value={draft.title}
+              onChangeText={(title) => setDraft((d) => ({ ...d, title }))}
+              placeholder="What needs doing?"
+              placeholderTextColor={colors.inkFaint}
+              style={[styles.input, errors.title && styles.inputError]}
+              maxLength={200}
+            />
+            {errors.title && <Text style={styles.error}>{errors.title}</Text>}
+          </View>
+
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Notes</Text>
+            <TextInput
+              value={draft.notes}
+              onChangeText={(notes) => setDraft((d) => ({ ...d, notes }))}
+              placeholder="Optional details"
+              placeholderTextColor={colors.inkFaint}
+              style={[styles.input, styles.notes]}
+              multiline
+              maxLength={2000}
+            />
+          </View>
+
+          <ScheduleFields
+            value={{
+              schedDate: draft.schedDate,
+              schedTime: draft.schedTime,
+              durationMin: draft.durationMin,
+              customDuration: draft.customDuration,
+            }}
+            onChange={(next) => setDraft((d) => ({ ...d, ...next }))}
+            errors={errors}
           />
-          {errors.title && <Text style={styles.error}>{errors.title}</Text>}
-        </View>
 
-        <View style={styles.fieldGroup}>
-          <Text style={styles.label}>Notes</Text>
-          <TextInput
-            value={draft.notes}
-            onChangeText={(notes) => setDraft((d) => ({ ...d, notes }))}
-            placeholder="Optional details"
-            placeholderTextColor={colors.inkFaint}
-            style={[styles.input, styles.notes]}
-            multiline
-            maxLength={2000}
+          <DeadlineFields
+            value={{ deadlineDate: draft.deadlineDate, deadlineTime: draft.deadlineTime }}
+            onChange={(next) => setDraft((d) => ({ ...d, ...next }))}
+            errors={errors}
           />
-        </View>
 
-        <ScheduleFields
-          value={{
-            schedDate: draft.schedDate,
-            schedTime: draft.schedTime,
-            durationMin: draft.durationMin,
-            customDuration: draft.customDuration,
-          }}
-          onChange={(next) => setDraft((d) => ({ ...d, ...next }))}
-          errors={errors}
-        />
-
-        <DeadlineFields
-          value={{ deadlineDate: draft.deadlineDate, deadlineTime: draft.deadlineTime }}
-          onChange={(next) => setDraft((d) => ({ ...d, ...next }))}
-          errors={errors}
-        />
-
-        <Button label="Save" onPress={save} disabled={saving} />
-      </ScrollView>
-    </KeyboardAvoidingView>
+          <Button label="Save" onPress={save} disabled={saving} />
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: colors.paper },
   flex: { flex: 1 },
+  missingContainer: {
+    backgroundColor: colors.paper,
+    padding: spacing.xl,
+    gap: spacing.xl,
+  },
   container: {
     backgroundColor: colors.paper,
     padding: spacing.xl,

@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useTasksStore } from '@/stores/tasksStore';
 import { useUiStore } from '@/stores/uiStore';
@@ -46,10 +47,12 @@ export default function TaskActionsSheet() {
 
   if (!task) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.missing}>This task is no longer available.</Text>
-        <Action label="Close" icon="close" onPress={() => router.back()} />
-      </View>
+      <SafeAreaView edges={['top']} style={styles.safe}>
+        <View style={styles.container}>
+          <Text style={styles.missing}>This task is no longer available.</Text>
+          <Action label="Close" icon="close" onPress={() => router.back()} />
+        </View>
+      </SafeAreaView>
     );
   }
 
@@ -99,28 +102,31 @@ export default function TaskActionsSheet() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.taskTitle} numberOfLines={2}>
-        {task.title}
-      </Text>
-      <Action label="Complete" icon="checkmark-circle-outline" accent onPress={onComplete} />
-      <Action
-        label={canTomorrow ? 'Tomorrow' : 'Schedule for tomorrow…'}
-        icon="sunny-outline"
-        onPress={onTomorrow}
-      />
-      <Action label="Pick date & time…" icon="calendar-outline" onPress={onPickDate} />
-      <Action
-        label="Clear schedule"
-        icon="close-circle-outline"
-        onPress={onClear}
-        disabled={!hasSchedule}
-      />
-    </View>
+    <SafeAreaView edges={['top']} style={styles.safe}>
+      <View style={styles.container}>
+        <Text style={styles.taskTitle} numberOfLines={2}>
+          {task.title}
+        </Text>
+        <Action label="Complete" icon="checkmark-circle-outline" accent onPress={onComplete} />
+        <Action
+          label={canTomorrow ? 'Tomorrow' : 'Schedule for tomorrow…'}
+          icon="sunny-outline"
+          onPress={onTomorrow}
+        />
+        <Action label="Pick date & time…" icon="calendar-outline" onPress={onPickDate} />
+        <Action
+          label="Clear schedule"
+          icon="close-circle-outline"
+          onPress={onClear}
+          disabled={!hasSchedule}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: colors.paper },
   container: {
     backgroundColor: colors.paper,
     padding: spacing.xl,
