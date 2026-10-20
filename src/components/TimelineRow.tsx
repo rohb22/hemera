@@ -69,7 +69,12 @@ export function TimelineRow({ cluster, now, onPress, onComplete }: TimelineRowPr
 
 export function NowMarker({ now }: { now: Date }) {
   return (
-    <View style={styles.row}>
+    <View
+      accessible
+      accessibilityRole="text"
+      accessibilityLabel={`Now, ${format(now, 'HH:mm')}`}
+      style={styles.row}
+    >
       <View style={styles.timeCol}>
         <Text style={styles.nowTime}>{format(now, 'HH:mm')}</Text>
       </View>

@@ -36,6 +36,7 @@ Source of truth order: this document → product brief → README.
 | D9 | **Deadline can carry a time (stage-4 revision of A4).** A deadline is an optional date plus an optional time-of-day. No time = all-day (due at end of day); with a time, due/overdue is evaluated against it (FR-T6). |
 | D10 | **Habit week row (stage-4).** Each habit row on the Habits tab shows a **Mon–Sun day-cell row** instead of a plain "3× per week" count; tapping **today's** cell toggles done ↔ blank (1 tap). Planned days are emphasised and progress reads as "n of <planned days> this week" (D11); "target met" appears when done-count ≥ planned-days. Past days are read-only (missed shows muted); future days are inactive. Skip and exceptions are set in the habit detail sheet. Completing/skipping is only possible for today (revises H8). |
 | D11 | **Habit days, not a weekly count (stage-4).** A habit stores a set of **planned weekdays** (Mon–Sun; at least one; default every day). The sheet shows day toggles (M T W T F S S) instead of a 1–7 stepper. **Any day can still be completed** — the planned days are a default/emphasis, not a lock; an off-day completion is allowed and counts. Only planned days that passed without a `done`/`skipped` state read as `missed`. Progress = this week's done-count vs the number of planned days in the window. Supersedes the per-week target count (D1). |
+| D12 | **Single creation affordance + single home (stage-5).** The adaptive FAB (+) is the only way to create: task on Today, habit on Habits. The first-run panel is copy-only (the FAB is its only CTA); F8's "Create a habit" button is removed. A task shown in the viewed day's timeline is excluded from pool sections, so a past-scheduled task still on today's rail is not listed twice (FR-T6, FR-D4). Supersedes F8's secondary CTA. |
 
 ### 1.3 Assumptions (challenge any of these)
 
@@ -225,6 +226,8 @@ the edit sheet; swipe right completes.
 today/overdue* (unscheduled with deadline) → *unscheduled* → *Later*.
 - AC: Completing or rescheduling any item updates its section on next
   render with no manual refresh.
+- AC: A task shown in the viewed day's timeline never also appears in a
+  pool section — one home per task (D12).
 
 **FR-D5 — Past-day edit.** Any past day renders the same layout;
 completion and edits allowed (D4). Habits are not shown on Today, so
@@ -321,8 +324,8 @@ same actions for that day's occurrence (D4).
 confirmation copy explains archive semantics ("history is kept") →
 confirm.
 
-**F8 — First run.** Today shows welcoming empty state with a single
-primary CTA ("Add your first task") and a secondary ("Create a habit").
+**F8 — First run.** Today shows a welcoming, copy-only empty panel; the
+adaptive FAB (+) is the single creation affordance (D12).
 
 ---
 
@@ -350,8 +353,8 @@ primary CTA ("Add your first task") and a secondary ("Create a habit").
 
 ## 6. Empty States
 
-- **First run Today:** calm illustration/typographic panel; CTA "Add
-  your first task"; secondary "Create a habit".
+- **First run Today:** calm typographic panel, copy only — the adaptive
+  + is the single CTA (D12).
 - **Empty timeline day:** soft "Nothing scheduled" line inside the
   timeline area.
 - **Empty pool:** "All clear" style copy; no red/zero counters.

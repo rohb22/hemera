@@ -53,6 +53,22 @@ describe('habitsRepository', () => {
     expect(await repo.listArchived()).toHaveLength(0);
   });
 
+  it('archiving keeps occurrence history and restore revives the habit (R2, D5)', async () => {
+    const { repo } = await setup();
+    const habit = await repo.create({ name: 'Read', daysMask: 127 });
+    await repo.setOccurrence(habit.id, '2026-10-19', 'done');
+
+    await repo.archive(habit.id);
+
+    expect(await repo.listActive()).toHaveLength(0);
+    const history = await repo.getOccurrences(habit.id);
+    expect(history.map((row) => row.state)).toEqual(['done']);
+
+    await repo.restore(habit.id);
+    expect((await repo.listActive()).map((h) => h.id)).toEqual([habit.id]);
+    expect((await repo.getOccurrences(habit.id)).map((row) => row.state)).toEqual(['done']);
+  });
+
   it('lists habits newest first', async () => {
     const { repo } = await setup();
     const first = await repo.create({ name: 'First', daysMask: 127 });

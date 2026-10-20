@@ -71,6 +71,7 @@ export default function SettingsScreen() {
           <Text style={styles.overline}>Data</Text>
           <View style={styles.card}>
             <View
+              accessibilityRole="button"
               accessibilityState={{ disabled: true }}
               accessibilityLabel="Export, coming later"
               style={styles.row}

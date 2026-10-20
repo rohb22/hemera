@@ -88,4 +88,25 @@ describe('tasksRepository', () => {
       repo.create({ title: 'Nope', deadlineTime: '09:00' }),
     ).rejects.toThrow();
   });
+
+  it('round-trips a 200-character title and rejects 201 (schema bound)', async () => {
+    const { repo } = await setup();
+    const title = 'x'.repeat(200);
+
+    const task = await repo.create({ title });
+    expect((await repo.getById(task.id))?.title).toBe(title);
+    await expect(repo.create({ title: 'x'.repeat(201) })).rejects.toThrow();
+  });
+
+  it('enforces the 5–1440 minute duration bounds at the schema level', async () => {
+    const { repo } = await setup();
+    const task = await repo.create({ title: 'Bound check' });
+
+    await repo.update(task.id, { scheduledDate: '2026-10-20', startTime: '09:00', durationMin: 5 });
+    await repo.update(task.id, { durationMin: 1440 });
+    await expect(
+      repo.update(task.id, { durationMin: 1441 }),
+    ).rejects.toThrow();
+    await expect(repo.update(task.id, { durationMin: 4 })).rejects.toThrow();
+  });
 });

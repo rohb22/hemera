@@ -11,6 +11,11 @@
       "supportsTablet": false
     },
     "android": {
+      "package": "com.hemera.app",
+      "versionCode": 1,
+      "blockedPermissions": [
+        "android.permission.INTERNET"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#FAF7F2"
@@ -33,10 +38,26 @@
       "expo-sqlite",
       "expo-font",
       "expo-status-bar",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "buildArchs": [
+              "arm64-v8a"
+            ]
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b1f2612f-a5ce-4cf0-ae48-7026110cf3fb"
+      }
     }
   }
 }

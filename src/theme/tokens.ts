@@ -6,7 +6,7 @@ export const colors = {
   surfaceMuted: '#F2EDE5',
   ink: '#2A2622',
   inkMuted: '#6E655B',
-  inkFaint: '#9A9187',
+  inkFaint: '#787066',
   hairline: '#E5DED3',
   accent: '#5B6B54',
   accentSoft: '#E8EDE4',

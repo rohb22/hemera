@@ -84,6 +84,8 @@ router modals with sheet presentation (ADR-0005).
    today; caption "Due today" / "Was due Sun") → ***Unscheduled*** (newest
    first) → ***Later*** (collapsed disclosure, hidden when empty;
    expand reveals muted rows with one-tap reschedule/complete, D3).
+   The pool excludes tasks already on the viewed day's timeline — one
+   home per task (D12, FR-D4).
    Empty pool: "All clear for today" (no counters).
 
 ### 4.2 Task row anatomy
@@ -140,9 +142,9 @@ D9).
 this habit? Its history is kept and you can restore it later." →
 archived (D5), toast with *Undo*.
 
-**F8 First run.** Today shows a typographic empty panel: "A calm place
-for your day." + primary *Add your first task*, secondary *Create a
-habit*.
+**F8 First run.** Today shows a copy-only typographic empty panel
+("A quiet start" / "Tap + to add your first task. Habits live on their
+own tab."); the adaptive FAB (+) is the single CTA (D12).
 
 ## 6. States
 
@@ -151,7 +153,7 @@ habit*.
 | Cold launch | Native splash while fonts preload + DB opens; Today renders with skeletons (timeline/pool placeholders) only if the read takes > 300 ms; target is direct render < 2 s (NFR-F). |
 | Read error | Full-screen calm error panel: "Couldn't load your day." + *Try again*. Never a blank screen. |
 | Write error | Non-destructive toast; UI state unchanged; no partial writes (transactions). |
-| Empty | Per requirements §6 — no red, no zero-counters, single CTA on first run. |
+| Empty | Per requirements §6 — no red, no zero-counters; the adaptive FAB is the single CTA on first run (D12). |
 | Loading (sheets) | Sheets open instantly with form content; saves show inline spinner on the button, inputs disabled briefly. |
 
 ## 7. Habits screen

@@ -30,9 +30,8 @@ export function TaskRow({
     <View style={[styles.row, variant === 'later' && styles.laterRow]}>
       {variant === 'attention' && <View style={styles.attentionBar} />}
       <Pressable
-        accessibilityRole="checkbox"
-        accessibilityState={{ checked: false }}
-        accessibilityLabel={`Complete ${task.title}`}
+        accessibilityRole="button"
+        accessibilityLabel={`Mark ${task.title} complete`}
         hitSlop={spacing.sm}
         onPress={() => onToggle(task)}
         style={styles.checkTarget}

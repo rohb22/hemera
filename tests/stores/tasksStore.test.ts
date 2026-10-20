@@ -182,6 +182,27 @@ describe('clearSchedule', () => {
   });
 });
 
+describe('removeTask', () => {
+  it('permanently removes the task from the repository and state', async () => {
+    useTasksStore.setState({ tasks: [makeTask({ id: 'a' }), makeTask({ id: 'b' })] });
+
+    await useTasksStore.getState().removeTask('a');
+
+    expect(repo.remove).toHaveBeenCalledWith('a');
+    expect(useTasksStore.getState().tasks.map((t) => t.id)).toEqual(['b']);
+  });
+
+  it('keeps the task and shows a toast when the delete fails', async () => {
+    useTasksStore.setState({ tasks: [makeTask({ id: 'a' })] });
+    repo.remove.mockRejectedValueOnce(new Error('db locked'));
+
+    await expect(useTasksStore.getState().removeTask('a')).rejects.toThrow('db locked');
+
+    expect(useTasksStore.getState().tasks).toHaveLength(1);
+    expect(useUiStore.getState().toast?.message).toBe("Couldn't save — try again");
+  });
+});
+
 describe('completeTask', () => {
   it('removes the task from state and returns it for undo', async () => {
     const task = makeTask({ id: 'a' });

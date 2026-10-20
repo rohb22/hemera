@@ -17,7 +17,7 @@ Warm paper palette — natural, low-contrast chrome, one accent.
 | `color.surfaceMuted` | `#F2EDE5` | Skeletons, disabled fills, *Later* rows |
 | `color.ink` | `#2A2622` | Primary text (≈13:1 on paper) |
 | `color.inkMuted` | `#6E655B` | Captions, metadata (≈5.3:1 on paper) — AA |
-| `color.inkFaint` | `#9A9187` | Timeline node times, placeholders (non-essential only) |
+| `color.inkFaint` | `#787066` | De-emphasized text: placeholders, hints, unplanned day letters (≈4.6:1 on paper) — AA |
 | `color.hairline` | `#E5DED3` | Dividers, timeline rail, borders |
 | `color.accent` | `#5B6B54` | Primary actions, done-state, focus rings (sage) |
 | `color.accentSoft` | `#E8EDE4` | Done-state fills, selected chips |

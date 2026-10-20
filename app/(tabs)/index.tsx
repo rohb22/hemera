@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, SectionList, StyleSheet, Text, View } from 'react-native';
+import { useReducedMotion } from 'react-native-reanimated';
 
 import { Button } from '@/components/PrimaryButton';
 import { Fab } from '@/components/Fab';
@@ -60,6 +61,7 @@ export default function TodayScreen() {
   const markerIndexRef = useRef(0);
   const scrolledForRef = useRef<string | null>(null);
   const [laterOpen, setLaterOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     refreshNow();
@@ -69,7 +71,13 @@ export default function TodayScreen() {
   const today = todayKey(now);
   const isViewingToday = viewDate === today;
   const timeline = useMemo(() => timelineTasks(tasks, viewDate), [tasks, viewDate]);
-  const pools = useMemo(() => groupPool(tasks, now), [tasks, now]);
+  const pools = useMemo(() => {
+    const onTimeline = new Set(timeline.map((task) => task.id));
+    return groupPool(
+      tasks.filter((task) => !onTimeline.has(task.id)),
+      now,
+    );
+  }, [tasks, timeline, now]);
   const clusters = useMemo(() => clusterTimeline(timeline), [timeline]);
 
   const dayScheduled = useMemo(
@@ -136,11 +144,11 @@ export default function TodayScreen() {
       listRef.current?.scrollToLocation({
         sectionIndex: 0,
         itemIndex: markerIndex,
-        animated: true,
+        animated: !reduceMotion,
       });
     });
     return () => cancelAnimationFrame(frame);
-  }, [status, timelineItems, isViewingToday, viewDate]);
+  }, [status, timelineItems, isViewingToday, viewDate, reduceMotion]);
 
   const onComplete = async (task: Task) => {
     try {
@@ -257,7 +265,11 @@ export default function TodayScreen() {
         </Pressable>
       </View>
       {isViewingToday ? (
-        <View accessibilityLabel="Viewing today" style={styles.pillQuiet}>
+        <View
+          accessibilityRole="text"
+          accessibilityLabel="Viewing today"
+          style={styles.pillQuiet}
+        >
           <Text style={styles.pillQuietText}>Today</Text>
         </View>
       ) : (
@@ -294,25 +306,18 @@ export default function TodayScreen() {
           <View style={styles.panel}>
             <Text style={styles.panelTitle}>A quiet start</Text>
             <Text style={styles.panelBody}>
-              Add your first task and take the rest of the day from there.
+              Tap + to add your first task. Habits live on their own tab.
             </Text>
-            <Button
-              label="Add your first task"
-              onPress={() => router.push('/sheet/quick-add')}
-            />
-            <Button
-              label="Create a habit"
-              variant="secondary"
-              onPress={() =>
-                router.push({ pathname: '/sheet/quick-add', params: { mode: 'habit' } })
-              }
-            />
           </View>
         </View>
       ) : isLoading ? (
         <View style={styles.panelWrap}>
           {header}
-          <View style={styles.skeletonWrap} accessibilityLabel="Loading">
+          <View
+            accessibilityRole="progressbar"
+            accessibilityLabel="Loading your day"
+            style={styles.skeletonWrap}
+          >
             <View style={[styles.skeleton, { height: 28, width: '60%' }]} />
             <View style={[styles.skeleton, { height: 72 }]} />
             <View style={[styles.skeleton, { height: 72 }]} />
@@ -341,7 +346,7 @@ export default function TodayScreen() {
         />
       )}
 
-      {!isFirstRun && <Fab onPress={() => router.push('/sheet/quick-add')} />}
+      <Fab onPress={() => router.push('/sheet/quick-add')} />
     </Screen>
   );
 }

@@ -109,6 +109,7 @@ export default function QuickAddSheet() {
                 <Text style={styles.label}>Title</Text>
                 <TextInput
                   autoFocus
+                  accessibilityLabel="Title"
                   value={draft.title}
                   onChangeText={(title) => setDraft((d) => ({ ...d, title }))}
                   placeholder="What needs doing?"
@@ -141,6 +142,7 @@ export default function QuickAddSheet() {
               <View style={styles.fieldGroup}>
                 <Text style={styles.label}>Notes</Text>
                 <TextInput
+                  accessibilityLabel="Notes"
                   value={draft.notes}
                   onChangeText={(notes) => setDraft((d) => ({ ...d, notes }))}
                   placeholder="Optional details"
@@ -157,6 +159,7 @@ export default function QuickAddSheet() {
                 <Text style={styles.label}>Name</Text>
                 <TextInput
                   autoFocus
+                  accessibilityLabel="Habit name"
                   value={habitName}
                   onChangeText={(text) => {
                     setHabitName(text);

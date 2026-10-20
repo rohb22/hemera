@@ -22,11 +22,16 @@ export function ToastHost() {
         { paddingBottom: insets.bottom + TAB_BAR_HEIGHT + spacing.md },
       ]}
     >
-      <View style={styles.card}>
+      <View
+        accessibilityRole="alert"
+        accessibilityLiveRegion="polite"
+        style={styles.card}
+      >
         <Text style={styles.message}>{toast.message}</Text>
         {toast.actionLabel ? (
           <Pressable
             accessibilityRole="button"
+            accessibilityLabel={toast.actionLabel}
             hitSlop={spacing.sm}
             onPress={() => {
               toast.onAction?.();

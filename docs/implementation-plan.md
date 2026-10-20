@@ -185,9 +185,10 @@ Resolve the open stage-3 proposals (see §5). Each is a written decision
 
 ---
 
-### M4 — Polish, hardening, beta
+### M4 — Polish, hardening, personal beta
 
-**Goal:** a beta build you can use daily on your own phone.
+**Goal:** a build installable and usable daily on your own phone, shipped
+as a GitHub Release APK (personal use; no app stores).
 
 **Scope / FRs:** NFR-A (accessibility), NFR-F (perf), §5 edge cases,
 FR-P1 (migration from a real prior DB).
@@ -201,11 +202,20 @@ FR-P1 (migration from a real prior DB).
   storage failure, archive-with-pending, 200-char title, duration bounds,
   deadline all-day vs timed (D9).
 - Migration test: install previous build's DB → migrate → data intact.
-- EAS build config + personal beta distribution (TestFlight / internal);
-  privacy labels (no network, local-only).
+- Personal distribution (decided): EAS `preview` profile builds an
+  installable **APK** (`android.buildType: "apk"`), arm64-only via
+  `expo-build-properties` → `android.buildArchs` (SDK-supported ABI
+  filtering; per-ABI split APKs are not exposed by CNG and are
+  unnecessary for one device). Attach the artifact to a GitHub Release;
+  `INTERNET` is blocked in the manifest to enforce local-only.
+  No store listings, AAB, privacy labels, or TestFlight.
+- Device-beta fixes: FR-T4 *Delete task…* (confirmation, permanent) in
+  the task-actions sheet; pool excludes timeline tasks (single home,
+  D12); adaptive FAB is the only creation affordance on a fresh install
+  (copy-only first-run panel, D12).
 - Copy review (guilt-free audit) + optional dev demo data for review.
 
-**Demo:** install beta via TestFlight/internal, use it for a real day.
+**Demo:** install the GitHub Release APK and use it for a real day.
 
 ---
 
@@ -284,4 +294,10 @@ Today-tab reset, past-day editing, no now-line past, week-start setting
 (Mon/Sun) re-deriving habit windows (A3), Archived habits sub-screen with
 restore (FR-S2), export placeholder (FR-S3), first-run/empty/error/
 loading states, native scroll indicators hidden app-wide; 103 tests
-green). M3.5 closed (§5 stage-3 decisions all resolved). M4 next.*
+green). M3.5 closed (§5 stage-3 decisions all resolved). M4 closed
+(device-verified: accessibility pass — labels/roles/live regions, reduced
+motion, AA `inkFaint`; edge-case tests for midnight/DST/migration/archive/
+schema bounds; arm64-only APK with `INTERNET` blocked and EAS `preview`;
+beta fixes — adaptive FAB is the only creation affordance (D12), pool
+never duplicates the viewed day's timeline (D12), FR-T4 delete added;
+118 tests green). v0.1.0 is the first GitHub Release APK.*

@@ -90,7 +90,11 @@ export default function HabitsScreen() {
       ) : status === 'loading' && habits.length === 0 ? (
         <View style={styles.body}>
           <Text style={styles.heading}>Habits</Text>
-          <View style={styles.skeletonWrap} accessibilityLabel="Loading">
+          <View
+            accessibilityRole="progressbar"
+            accessibilityLabel="Loading your habits"
+            style={styles.skeletonWrap}
+          >
             <View style={[styles.skeleton, { height: 64 }]} />
             <View style={[styles.skeleton, { height: 64 }]} />
             <View style={[styles.skeleton, { height: 64, width: '85%' }]} />

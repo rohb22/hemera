@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useTasksStore } from '@/stores/tasksStore';
@@ -13,9 +13,11 @@ interface ActionProps {
   onPress: () => void;
   disabled?: boolean;
   accent?: boolean;
+  destructive?: boolean;
 }
 
-function Action({ label, icon, onPress, disabled, accent }: ActionProps) {
+function Action({ label, icon, onPress, disabled, accent, destructive }: ActionProps) {
+  const tint = accent ? colors.surface : destructive ? colors.danger : colors.ink;
   return (
     <Pressable
       accessibilityRole="button"
@@ -29,8 +31,10 @@ function Action({ label, icon, onPress, disabled, accent }: ActionProps) {
         disabled && styles.disabled,
       ]}
     >
-      <Ionicons name={icon} size={20} color={accent ? colors.surface : colors.ink} />
-      <Text style={[styles.actionLabel, accent && styles.actionLabelAccent]}>{label}</Text>
+      <Ionicons name={icon} size={20} color={tint} />
+      <Text style={[styles.actionLabel, { color: tint }, accent && styles.actionLabelAccent]}>
+        {label}
+      </Text>
     </Pressable>
   );
 }
@@ -43,6 +47,7 @@ export default function TaskActionsSheet() {
   const clearSchedule = useTasksStore((s) => s.clearSchedule);
   const completeTask = useTasksStore((s) => s.completeTask);
   const uncompleteTask = useTasksStore((s) => s.uncompleteTask);
+  const removeTask = useTasksStore((s) => s.removeTask);
   const showToast = useUiStore((s) => s.showToast);
 
   if (!task) {
@@ -101,6 +106,26 @@ export default function TaskActionsSheet() {
     }
   };
 
+  const onDelete = () => {
+    Alert.alert('Delete this task?', 'This can’t be undone.', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => {
+          void (async () => {
+            try {
+              await removeTask(task.id);
+              router.back();
+            } catch {
+              // toast shown by the store
+            }
+          })();
+        },
+      },
+    ]);
+  };
+
   return (
     <SafeAreaView edges={['top']} style={styles.safe}>
       <View style={styles.container}>
@@ -120,6 +145,9 @@ export default function TaskActionsSheet() {
           onPress={onClear}
           disabled={!hasSchedule}
         />
+        <View style={styles.deleteWrap}>
+          <Action label="Delete task…" icon="trash-outline" destructive onPress={onDelete} />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -149,5 +177,6 @@ const styles = StyleSheet.create({
   disabled: { opacity: 0.5 },
   actionLabel: { ...type.body, color: colors.ink },
   actionLabelAccent: { color: colors.surface, fontWeight: '600' },
+  deleteWrap: { marginTop: spacing.md },
   missing: { ...type.body, color: colors.inkMuted },
 });

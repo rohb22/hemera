@@ -113,6 +113,8 @@ export function HabitDayCells({
           return (
             <View
               key={dateKey}
+              accessible
+              accessibilityRole="text"
               accessibilityLabel={label}
               style={[styles.cell, isToday && styles.cellToday]}
             >

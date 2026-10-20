@@ -76,6 +76,7 @@ export default function TaskSheet() {
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Title</Text>
             <TextInput
+              accessibilityLabel="Title"
               value={draft.title}
               onChangeText={(title) => setDraft((d) => ({ ...d, title }))}
               placeholder="What needs doing?"
@@ -89,6 +90,7 @@ export default function TaskSheet() {
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Notes</Text>
             <TextInput
+              accessibilityLabel="Notes"
               value={draft.notes}
               onChangeText={(notes) => setDraft((d) => ({ ...d, notes }))}
               placeholder="Optional details"

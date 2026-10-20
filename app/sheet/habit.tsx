@@ -81,6 +81,7 @@ export default function HabitSheet() {
             <Text style={styles.label}>Name</Text>
             <TextInput
               autoFocus={!isEdit}
+              accessibilityLabel="Habit name"
               value={name}
               onChangeText={(text) => {
                 setName(text);

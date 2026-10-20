@@ -4,11 +4,11 @@
 
 Hemera has **approved product requirements, an approved architecture,
 and an approved implementation plan**. **Stage 5 (development) is
-approved and in progress** — M0 (walking skeleton), M1 (Today:
-timeline + scheduling), M2 (Habits) and M3 (past-day navigation +
-Settings) are complete, and M3.5 (§5 tooling/dependency decisions) is
-closed; M4 (polish, hardening, beta) is next. Build to the approved
-docs; do not silently change behavior.
+complete** — M0 (walking skeleton), M1 (Today: timeline + scheduling),
+M2 (Habits), M3 (past-day navigation + Settings), M3.5 (§5
+tooling/dependency decisions) and M4 (polish, hardening, personal beta)
+are closed; v0.1.0 is the first GitHub Release APK. Build to the
+approved docs; do not silently change behavior.
 
 Approved stage order (each requires user approval before starting):
 
@@ -22,14 +22,18 @@ Approved stage order (each requires user approval before starting):
    Today and no horizontal scrolling, compact timeline rail superseding
    ADR-0001, deadline = date + optional time, habit rows use Mon–Sun
    day cells with today tap-to-toggle, habits scheduled by weekday rather
-   than a weekly count).
+   than a weekly count; D12: the adaptive FAB is the sole creation
+   affordance and the pool never duplicates the viewed day's timeline).
    `prototype/index.html` is a throwaway mock, not a deliverable.
 4. ✅ Implementation planning → `docs/implementation-plan.md`
    (vertical slices M0–M4, definition of done, §5 open decisions).
-5. ▶️ Development — **in progress (M4)**. M0 (walking skeleton), M1
-   (Today: timeline + scheduling), M2 (Habits) and M3 (past-day
-   navigation + Settings) complete, all device-verified; M3.5 closed.
-   Milestones and DoD per `docs/implementation-plan.md`.
+5. ✅ Development — **complete (M0–M4)**. M0 (walking skeleton), M1
+   (Today: timeline + scheduling), M2 (Habits), M3 (past-day navigation
+   + Settings), M3.5 (tooling decisions) and M4 (polish, hardening,
+   personal beta) complete, all device-verified. v0.1.0 is the first
+   GitHub Release APK. Milestones and DoD per
+   `docs/implementation-plan.md`; post-MVP items are the open questions
+   in requirements §11 / brief §10.
 
 ## Confirmed constraints (from product brief §8)
 
@@ -52,7 +56,7 @@ Approved stage order (each requires user approval before starting):
 ## Working agreement
 
 - Read `docs/product-requirements.md` before any behavioral or schema
-  decision (FR IDs, rules T/H/R, decisions D1–D11, assumptions A1–A14);
+  decision (FR IDs, rules T/H/R, decisions D1–D12, assumptions A1–A14);
   `docs/product-brief.md` is the source of truth for vision and scope.
 - Interview-driven workflow: one high-impact question at a time;
   distinguish confirmed / assumed / open; ask for approval before
