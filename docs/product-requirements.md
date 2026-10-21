@@ -436,13 +436,17 @@ Carried from brief §7, restated verifiable:
 
 ## 11. Remaining Open Questions (non-blocking)
 
-1. Reminder/notification strategy (v1.1) — brief §10.3.
+1. ~~Reminder/notification strategy (v1.1)~~ **Resolved (post-MVP):**
+   see `docs/v1.1-reminders.md` (D13–D19).
 2. Export format — brief §10.4.
 3. Revisit D3's 7-day threshold after beta usage.
-4. ~~Habit emoji picker scope~~ **Resolved (stage 3):** habits are
+4. **Reminder footnote (post-MVP):** in v1.1 reminders are local
+   notifications (D13–D19); calendar-app sync (e.g. Yahoo Calendar) is
+   explicitly not part of that decision and remains unconsidered.
+5. ~~Habit emoji picker scope~~ **Resolved (stage 3):** habits are
    represented by name + state dot only — no emoji, icon, monogram, or
    per-habit colour (D6).
-5. Overlap rendering style (stacked vs. side-by-side lanes).
+6. Overlap rendering style (stacked vs. side-by-side lanes).
 
 ## 12. Deltas vs. Product Brief (for brief errata pass)
 

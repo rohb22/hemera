@@ -255,7 +255,9 @@ CI-ready single command: `npm test` (both envs via project split).
 
 ## 12. Explicit non-goals
 
-Sync, accounts, analytics, notifications, widgets, dark mode,
-localization infrastructure. The schema's epoch timestamps and
-append-only occurrence rows keep a future export/sync path feasible
-without redesign.
+Sync, accounts, analytics, widgets, dark mode, localization
+infrastructure. **v1.1 notifications are local OS-scheduled reminders
+only** — no push, no server, no background fetch
+(`docs/v1.1-reminders.md`, D13); `INTERNET` stays blocked. The schema's
+epoch timestamps and append-only occurrence rows keep a future
+export/sync path feasible without redesign.

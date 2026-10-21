@@ -49,7 +49,7 @@ router modals with sheet presentation (ADR-0005).
 | --- | --- | --- |
 | Today | The day at a glance: header, timeline, pool. Date-nav to any past day. No habits (D7). | FR-D1–D5 |
 | Habits | All active habits: current-week day cells (planned days emphasised), progress caption; tap → detail sheet. | FR-H1–H5 |
-| Settings | Week start, archived habits, export placeholder, about. | FR-S1–S3 |
+| Settings | Week start, reminders, archived habits, export placeholder, about. | FR-S1–S3, FR-R1 |
 | Task sheet | Create/edit title, notes, deadline, schedule; complete/un-complete; delete. | FR-T1–T4 |
 | Habit sheet | Create/edit name, **Mon–Sun day toggles**; archive. | FR-H1, H4, H5 |
 | Habit detail | Name, planned days, "this week" summary, last 4 weeks of dots. | FR-H3, A9 |
@@ -87,6 +87,12 @@ router modals with sheet presentation (ADR-0005).
    The pool excludes tasks already on the viewed day's timeline — one
    home per task (D12, FR-D4).
    Empty pool: "All clear for today" (no counters).
+
+**v1.1 reminders (D13–D19).** Opt-in lives only in Settings → Reminders
+(two switches + a habit time row); denial is a muted line with a system
+settings link, never a nag. One quiet caption line appears under the pool
+until reminders are enabled or dismissed once. Opening a task reminder
+opens its task sheet; the habit nudge opens Habits.
 
 ### 4.2 Task row anatomy
 

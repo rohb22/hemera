@@ -186,8 +186,9 @@ without migration pain.
    recommendation above):** past-scheduled tasks stay flagged for 7
    days, then auto-archive to a muted, collapsed *Later* group in the
    pool (requirements D3).
-3. **Reminder strategy for v1.1:** local notifications for scheduled
-   tasks and habit check-ins — timing, opt-in UX.
+3. **Reminder strategy for v1.1:** ~~local notifications for scheduled
+   tasks and habit check-ins — timing, opt-in UX~~ **Resolved
+   (post-MVP):** `docs/v1.1-reminders.md` (D13–D19).
 4. **Export format:** plain JSON dump vs. human-readable CSV/Markdown —
    matters when backup ships.
 5. ~~**Timeline bounds**~~ **Resolved (stage 2):** scrollable 24h

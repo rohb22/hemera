@@ -34,6 +34,14 @@ Approved stage order (each requires user approval before starting):
    GitHub Release APK. Milestones and DoD per
    `docs/implementation-plan.md`; post-MVP items are the open questions
    in requirements §11 / brief §10.
+6. ▶️ Post-MVP — **v1.1 Reminders** spec approved in
+   `docs/v1.1-reminders.md` (FR-R1–R6, D13–D19), implementation not
+   started. Reminders are **local OS-scheduled notifications only** —
+   opt-in in Settings, denied permission is a silent fallback, no
+   server/push/background fetch, `INTERNET` stays blocked. Next in the
+   post-MVP queue: Reset My Day (requirements §9), export/backup, D3
+   archive-threshold revisit; packaging plan (universal AAB →
+   bundletool per-ABI APKs) recorded in §7 of the v1.1 doc.
 
 ## Confirmed constraints (from product brief §8)
 
@@ -42,7 +50,8 @@ Approved stage order (each requires user approval before starting):
 - **MVP scope:** tasks + Today view + habits ONLY. Explicitly excluded:
   events, routines, goals, quick-capture inbox, Reset My Day, History
   UI, reminders, dark mode, localization. Do not add these without
-  approval.
+  approval. (**v1.1 exception:** reminders left this list when the user
+  approved `docs/v1.1-reminders.md`; nothing else has.)
 - **Domain rules:** task deadline ≠ scheduled time (separate fields);
   each habit occurrence has independent state; missed ≠ deleted; NO
   streaks, scores, or guilt mechanics anywhere.
@@ -70,6 +79,8 @@ Approved stage order (each requires user approval before starting):
 - `README.md` — vision and principles
 - `docs/product-brief.md` — approved product brief (stage 1)
 - `docs/product-requirements.md` — approved requirements (stage 2)
+- `docs/v1.1-reminders.md` — post-MVP v1.1 reminders spec (FR-R1–R6,
+  D13–D19; packaging plan §7)
 - `docs/implementation-plan.md` — approved implementation plan (stage 4;
   milestones M0–M4, open decisions)
 - `assets/images/` — brand assets (`icon.png`, `splash-icon.png`,
