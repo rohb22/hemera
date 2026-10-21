@@ -1,5 +1,5 @@
 import { Fraunces_500Medium, useFonts } from '@expo-google-fonts/fraunces';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { AppState, StyleSheet, Text, View } from 'react-native';
@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { bootstrap } from '@/bootstrap';
 import { ToastHost } from '@/components/Toast';
+import { getLastResponseTaskId, onNotificationResponse } from '@/services/reminders';
 import { useTasksStore } from '@/stores/tasksStore';
 import { useUiStore } from '@/stores/uiStore';
 import { colors, fontFamily, spacing, type } from '@/theme/tokens';
@@ -25,6 +26,7 @@ function BootError({ message }: { message: string }) {
 }
 
 export default function RootLayout() {
+  const router = useRouter();
   const [fontsLoaded, fontError] = useFonts({ Fraunces_500Medium });
   const [dbReady, setDbReady] = useState(false);
   const [bootError, setBootError] = useState<string | null>(null);
@@ -77,6 +79,17 @@ export default function RootLayout() {
       clearInterval(interval);
     };
   }, [ready]);
+
+  // D19: opening a task reminder lands on that task's sheet.
+  useEffect(() => {
+    if (!ready) return;
+    const openTask = (taskId: string | null) => {
+      if (taskId) router.push({ pathname: '/sheet/task', params: { id: taskId } });
+    };
+    const unsubscribe = onNotificationResponse(openTask);
+    void getLastResponseTaskId().then(openTask);
+    return unsubscribe;
+  }, [ready, router]);
 
   if (!ready) {
     return null;

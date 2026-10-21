@@ -58,6 +58,7 @@ export const useHabitsStore = create<HabitsState>((set, get) => ({
   async createHabit(input) {
     const habit = await withWriteError(getServices().habits.create(input));
     set((state) => ({ habits: [habit, ...state.habits] }));
+    await syncRemindersSafely();
     return habit;
   },
 
@@ -66,6 +67,7 @@ export const useHabitsStore = create<HabitsState>((set, get) => ({
     set((state) => ({
       habits: state.habits.map((h) => (h.id === id ? { ...h, ...patch } : h)),
     }));
+    await syncRemindersSafely();
   },
 
   async archiveHabit(id) {
@@ -74,6 +76,7 @@ export const useHabitsStore = create<HabitsState>((set, get) => ({
       habits: state.habits.filter((h) => h.id !== id),
       occurrences: state.occurrences.filter((o) => o.habitId !== id),
     }));
+    await syncRemindersSafely();
   },
 
   async loadArchived() {
@@ -110,5 +113,20 @@ export const useHabitsStore = create<HabitsState>((set, get) => ({
         updatedAt: Date.now(),
       }),
     }));
+    await syncRemindersSafely();
   },
 }));
+
+/**
+ * FR-R3/D13: completing or skipping a habit changes the nudge body, so the
+ * daily trigger is re-armed after every occurrence change. Deferred import
+ * keeps the stores cycle-free; failures never block the write.
+ */
+async function syncRemindersSafely(): Promise<void> {
+  try {
+    const module = await import('@/stores/reminderSync');
+    await module.syncReminders();
+  } catch {
+    // already reported by the sync layer
+  }
+}

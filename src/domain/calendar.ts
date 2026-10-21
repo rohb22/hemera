@@ -9,3 +9,7 @@ export const toTimeKey = (date: Date): string => format(date, TIME_KEY_FORMAT);
 export const todayKey = (now: Date): string => toDateKey(now);
 
 export const formatDayHeading = (date: Date): string => format(date, 'EEEE, MMMM d');
+
+/** Local-time `yyyy-MM-dd` + `HH:mm` → Date (no UTC shifting). */
+export const combineDateTimeKey = (dateKey: string, timeKey: string): Date =>
+  new Date(`${dateKey}T${timeKey}:00`);

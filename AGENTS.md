@@ -34,9 +34,9 @@ Approved stage order (each requires user approval before starting):
    GitHub Release APK. Milestones and DoD per
    `docs/implementation-plan.md`; post-MVP items are the open questions
    in requirements §11 / brief §10.
-6. ▶️ Post-MVP — **v1.1 Reminders** spec approved in
-   `docs/v1.1-reminders.md` (FR-R1–R6, D13–D19), implementation not
-   started. Reminders are **local OS-scheduled notifications only** —
+6. ▶️ Post-MVP — **v1.1 Reminders** approved; R1–R3 implemented on
+   `docs/v1.1-reminders.md` (FR-R1–R6, D13–D19), R4 device verification
+   pending. Reminders are **local OS-scheduled notifications only** —
    opt-in in Settings, denied permission is a silent fallback, no
    server/push/background fetch, `INTERNET` stays blocked. Next in the
    post-MVP queue: Reset My Day (requirements §9), export/backup, D3

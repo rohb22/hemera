@@ -15,6 +15,8 @@ import { groupPool, taskCaption, timelineTasks } from '@/domain/taskLabels';
 import { clusterMarkerIndex, clusterTimeline, type TimelineCluster } from '@/domain/timeline';
 import type { Task } from '@/domain/types';
 import { useTasksStore } from '@/stores/tasksStore';
+import { useSettingsStore } from '@/stores/settingsStore';
+import { syncReminders } from '@/stores/reminderSync';
 import { useUiStore } from '@/stores/uiStore';
 import { colors, radii, spacing, type } from '@/theme/tokens';
 
@@ -26,7 +28,8 @@ type TimelineItem =
 
 type PoolItem =
   | { kind: 'task'; key: string; task: Task; variant: TaskRowVariant; caption: string | null }
-  | { kind: 'emptyPool'; key: string };
+  | { kind: 'emptyPool'; key: string }
+  | { kind: 'reminderHint'; key: string };
 
 type ListItem = TimelineItem | PoolItem;
 
@@ -62,6 +65,10 @@ export default function TodayScreen() {
   const scrolledForRef = useRef<string | null>(null);
   const [laterOpen, setLaterOpen] = useState(false);
   const reduceMotion = useReducedMotion();
+  const reminderHintSeen = useSettingsStore((s) => s.reminderHintSeen);
+  const remindersEnabled =
+    useSettingsStore((s) => s.taskRemindersEnabled || s.habitRemindersEnabled);
+  const dismissReminderHint = useSettingsStore((s) => s.dismissReminderHint);
 
   useEffect(() => {
     refreshNow();
@@ -130,8 +137,12 @@ export default function TodayScreen() {
     if (!pools.reschedule.length && !pools.attention.length && !pools.pool.length && !pools.later.length) {
       result.push({ key: 'empty-pool', title: null, data: [{ kind: 'emptyPool', key: 'empty-pool' }] });
     }
+    // D18: one quiet line until reminders are enabled, or dismissed once.
+    if (!reminderHintSeen && !remindersEnabled) {
+      result.push({ key: 'reminder-hint', title: null, data: [{ kind: 'reminderHint', key: 'reminder-hint' }] });
+    }
     return result;
-  }, [pools, timelineItems, now, laterOpen]);
+  }, [pools, timelineItems, now, laterOpen, reminderHintSeen, remindersEnabled]);
 
   useEffect(() => {
     if (status !== 'ready' || !isViewingToday) return;
@@ -188,6 +199,23 @@ export default function TodayScreen() {
           <Text style={styles.softEmpty}>
             {isViewingToday ? 'All clear for today' : 'All clear'}
           </Text>
+        );
+      case 'reminderHint':
+        return (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Reminders are off. Open settings."
+            onPress={() => {
+              void dismissReminderHint();
+              void syncReminders();
+              router.push('/settings');
+            }}
+            style={({ pressed }) => [styles.reminderHint, pressed && styles.pressed]}
+          >
+            <Text style={styles.reminderHintText}>
+              Reminders are off — set one for a task in Settings.
+            </Text>
+          </Pressable>
         );
       default:
         return (
@@ -399,6 +427,8 @@ const styles = StyleSheet.create({
   },
   sectionTitleText: { ...type.overline, color: colors.inkMuted },
   softEmpty: { ...type.caption, color: colors.inkFaint, paddingVertical: spacing.lg },
+  reminderHint: { paddingVertical: spacing.md },
+  reminderHintText: { ...type.caption, color: colors.inkMuted },
   panelWrap: { flex: 1 },
   panel: {
     paddingTop: spacing.xxl,

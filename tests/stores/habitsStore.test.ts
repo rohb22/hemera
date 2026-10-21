@@ -1,3 +1,5 @@
+import '../helpers/remindersMock';
+
 import type { Habit, HabitOccurrence, NewHabitInput } from '@/domain/types';
 import type { HabitsRepository, HabitUpdate } from '@/repositories/habits';
 import type { SettingsRepository } from '@/repositories/settings';

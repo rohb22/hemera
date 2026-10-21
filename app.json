@@ -12,7 +12,7 @@
     },
     "android": {
       "package": "com.hemera.app",
-      "versionCode": 1,
+      "versionCode": 2,
       "blockedPermissions": [
         "android.permission.INTERNET"
       ],
@@ -39,6 +39,13 @@
       "expo-font",
       "expo-status-bar",
       "@react-native-community/datetimepicker",
+      [
+        "expo-notifications",
+        {
+          "color": "#8C3A2E",
+          "defaultChannel": "reminders"
+        }
+      ],
       [
         "expo-build-properties",
         {

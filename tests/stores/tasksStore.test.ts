@@ -1,5 +1,7 @@
 import { addDays, format } from 'date-fns';
 
+import '../helpers/remindersMock';
+
 import type { NewTaskInput, Task } from '@/domain/types';
 import type { HabitsRepository } from '@/repositories/habits';
 import type { SettingsRepository } from '@/repositories/settings';
@@ -58,8 +60,7 @@ beforeEach(() => {
     settings: {} as SettingsRepository,
   });
   useTasksStore.setState({ status: 'idle', error: null, tasks: [] });
-  useUiStore.getState().dismissToast();
-});
+  useUiStore.getState().dismissToast();});
 
 afterEach(() => {
   useUiStore.getState().dismissToast();
