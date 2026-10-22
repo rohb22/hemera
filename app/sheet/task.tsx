@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -28,21 +28,47 @@ import { colors, radii, spacing, type } from '@/theme/tokens';
 export default function TaskSheet() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const status = useTasksStore((s) => s.status);
   const task = useTasksStore((s) => s.tasks.find((t) => t.id === id));
   const updateTask = useTasksStore((s) => s.updateTask);
 
-  const [draft, setDraft] = useState<TaskDraft>(() =>
-    task ? draftFromTask(task) : emptyDraft(),
-  );
+  const [draft, setDraft] = useState<TaskDraft>(emptyDraft);
   const [errors, setErrors] = useState<TaskDraftErrors>({});
   const [saving, setSaving] = useState(false);
+  const seededFor = useRef<string | null>(null);
+
+  // A notification tap can open this sheet before the tasks store has
+  // loaded (a cold start: the deep link arrives while `bootstrap()` is
+  // still opening the database). Seeding the draft only in the `useState`
+  // initialiser would capture the empty draft and leave a blank "new
+  // task" form on screen, so the draft is seeded as soon as the task
+  // itself arrives — and only once, so later store updates never wipe
+  // unsaved edits.
+  useEffect(() => {
+    if (!task) return;
+    if (seededFor.current === task.id) return;
+    seededFor.current = task.id;
+    setDraft(draftFromTask(task));
+  }, [task]);
+
+  // Make sure the task is actually on hand if we arrived before the
+  // store had loaded.
+  useEffect(() => {
+    if (status === 'idle') void useTasksStore.getState().load();
+  }, [status]);
+
+  const loading = status === 'idle' || status === 'loading';
 
   if (!task) {
     return (
       <SafeAreaView edges={['top']} style={styles.safe}>
         <View style={styles.missingContainer}>
-          <Text style={styles.missing}>This task is no longer available.</Text>
-          <Button label="Close" variant="secondary" onPress={() => router.back()} />
+          <Text style={styles.missing}>
+            {loading ? 'Opening…' : 'This task is no longer available.'}
+          </Text>
+          {!loading && (
+            <Button label="Close" variant="secondary" onPress={() => router.back()} />
+          )}
         </View>
       </SafeAreaView>
     );

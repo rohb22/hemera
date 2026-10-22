@@ -68,6 +68,15 @@ with sensible max (1.6×) and reflows (no ellipsized headings).
 - The only "celebration" in the product is the quiet *target met* chip
   fading in — nothing animates on completion beyond row exit.
 
+### 1.5 System chrome
+
+- **Status bar:** dark content (`expo-status-bar`, `style="dark"`). The app
+  draws edge-to-edge over the paper background, so the bar carries no fill
+  of its own — it inherits `paper` and must therefore use dark text and
+  dark icons to stay legible. Light content on paper is never acceptable.
+- **Navigation bar:** the system gesture/button bar sits on `paper`.
+- The app is light-theme only; there is no dark variant to reconcile with.
+
 ## 2. Components
 
 ### 2.1 Buttons

@@ -1,6 +1,7 @@
 import { Fraunces_500Medium, useFonts } from '@expo-google-fonts/fraunces';
 import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { AppState, StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -105,6 +106,11 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
+        {/* The app is a light theme on paper. Android draws the system
+            status bar over the app content (edge-to-edge), so the bar has
+            to carry dark content explicitly — otherwise its default light
+            content is unreadable on the paper background. */}
+        <StatusBar style="dark" />
         <Stack
           screenOptions={{
             headerShown: false,

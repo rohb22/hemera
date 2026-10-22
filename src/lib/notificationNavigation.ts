@@ -25,7 +25,23 @@ export function openReminderTarget(router: ImperativeRouter, target: ReminderTar
 export function subscribeToNotificationTaps(
   open: (target: ReminderTarget | null) => void,
 ): () => void {
-  const unsubscribe = onNotificationResponse(open);
-  void getLastResponseTarget().then(open);
+  // One tap can reach us twice: once as a live response event and once as
+  // the native module's stored "last response" (read on launch). Without a
+  // guard the same tap would push the sheet twice.
+  let lastKey: string | null = null;
+  let lastAt = 0;
+
+  const handle = (target: ReminderTarget | null) => {
+    if (!target) return;
+    const key = target.kind === 'task' ? `task:${target.taskId}` : 'habits';
+    const now = Date.now();
+    if (key === lastKey && now - lastAt < 2000) return;
+    lastKey = key;
+    lastAt = now;
+    open(target);
+  };
+
+  const unsubscribe = onNotificationResponse(handle);
+  void getLastResponseTarget().then(handle);
   return unsubscribe;
 }
