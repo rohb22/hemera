@@ -1,7 +1,7 @@
-import { differenceInCalendarDays, parseISO } from 'date-fns';
+import { differenceInCalendarDays, format, parseISO } from 'date-fns';
 
 import { todayKey } from './calendar';
-import { taskPoolSection } from './taskLabels';
+import { scheduledStart, taskPoolSection } from './taskLabels';
 import type { Task } from './types';
 
 /**
@@ -128,6 +128,21 @@ export function groupResetCandidates(candidates: ResetCandidate[]): ResetGroup[]
   }
 
   return groups.filter((group) => group.candidates.length > 0);
+}
+
+/**
+ * The caption under a row's title (D27): the exact date and time the
+ * task was scheduled for.
+ *
+ * The weekday alone is not enough. A task in the "Earlier" group can be
+ * up to seven days old, and "Fri 09:00" does not say which Friday — so
+ * the date is spelled out. The wording matches the pool's caption so
+ * the two screens read as one voice.
+ */
+export function resetCaption(task: Task): string | null {
+  const start = scheduledStart(task);
+  if (!start) return null;
+  return `was scheduled ${format(start, 'EEE d MMM, HH:mm')}`;
 }
 
 /**

@@ -121,6 +121,14 @@ describe('reset screen', () => {
     expect(screen.getByText('Keep 09:00')).toBeTruthy();
   });
 
+  it('states the exact date each row was scheduled for (D27)', async () => {
+    mockTasksStore.tasks = [carriedOver()];
+
+    await render(<ResetScreen />);
+
+    expect(screen.getByText('was scheduled Wed 21 Oct, 09:00')).toBeTruthy();
+  });
+
   it('applies the plan and announces the result with an undo', async () => {
     mockTasksStore.tasks = [carriedOver()];
     mockResetStore.apply.mockResolvedValue({ resetId: 'reset-1', changed: 1 });

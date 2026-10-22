@@ -47,7 +47,7 @@ async function renderRow(choice: Choice = { action: 'keep' }) {
   const view = await render(
     <ResetTaskRow
       task={task}
-      caption="was scheduled Tue 09:00"
+      caption="was scheduled Wed 21 Oct, 09:00"
       choice={choice}
       onChoose={onChoose}
     />,
@@ -71,7 +71,7 @@ describe('reset task row', () => {
     await renderRow();
 
     expect(screen.getByText('Write the report')).toBeTruthy();
-    expect(screen.getByText('was scheduled Tue 09:00')).toBeTruthy();
+    expect(screen.getByText('was scheduled Wed 21 Oct, 09:00')).toBeTruthy();
   });
 
   it('offers exactly the four choices', async () => {

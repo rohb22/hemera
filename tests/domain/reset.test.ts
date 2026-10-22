@@ -4,6 +4,7 @@ import {
   groupResetCandidates,
   planReset,
   resetCandidates,
+  resetCaption,
 } from '@/domain/reset';
 import type { Task } from '@/domain/types';
 
@@ -118,6 +119,26 @@ describe('resetCandidates', () => {
       'yesterday-late',
       'older',
     ]);
+  });
+});
+
+describe('resetCaption', () => {
+  it('states the exact date and time (D27)', () => {
+    expect(resetCaption(task({ scheduledDate: '2026-10-21', startTime: '09:00' }))).toBe(
+      'was scheduled Wed 21 Oct, 09:00',
+    );
+  });
+
+  it('does not leave an "Earlier" row ambiguous', () => {
+    // A weekday alone would read the same for two tasks a week apart.
+    const caption = resetCaption(task({ scheduledDate: '2026-10-19', startTime: '09:00' }));
+
+    expect(caption).toBe('was scheduled Mon 19 Oct, 09:00');
+    expect(caption).toContain('19 Oct');
+  });
+
+  it('says nothing for a task that is not scheduled', () => {
+    expect(resetCaption(task({ scheduledDate: null, startTime: null }))).toBeNull();
   });
 });
 

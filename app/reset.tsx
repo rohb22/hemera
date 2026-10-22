@@ -10,9 +10,9 @@ import {
   groupResetCandidates,
   planReset,
   resetCandidates,
+  resetCaption,
   type ResetChoice,
 } from '@/domain/reset';
-import { taskCaption } from '@/domain/taskLabels';
 import { useResetStore } from '@/stores/resetStore';
 import { useTasksStore } from '@/stores/tasksStore';
 import { useUiStore } from '@/stores/uiStore';
@@ -106,7 +106,7 @@ export default function ResetScreen() {
               <ResetTaskRow
                 key={task.id}
                 task={task}
-                caption={taskCaption(task, now)}
+                caption={resetCaption(task)}
                 choice={choices[task.id] ?? { action: 'keep' }}
                 onChoose={onChoose}
               />
