@@ -4,6 +4,7 @@ import {
   habitNudgeBody,
   habitNudgeDate,
   nextHabitNudgeDate,
+  parseReminderTarget,
   parseReminderTime,
   reminderDiff,
   taskReminderDate,
@@ -124,8 +125,29 @@ describe('habitNudgeBody (FR-R3)', () => {
   });
 });
 
-describe('wantedReminders + reminderDiff (D13)', () => {
-  const base = {
+describe('parseReminderTarget (D19)', () => {
+  it('routes a task payload to that task', () => {
+    expect(parseReminderTarget({ kind: 'task', taskId: 't1' })).toEqual({
+      kind: 'task',
+      taskId: 't1',
+    });
+  });
+
+  it('routes the habit nudge to the Habits tab', () => {
+    expect(parseReminderTarget({ kind: 'habits' })).toEqual({ kind: 'habits' });
+  });
+
+  it('ignores anything it does not understand', () => {
+    expect(parseReminderTarget(undefined)).toBeNull();
+    expect(parseReminderTarget(null)).toBeNull();
+    expect(parseReminderTarget('task')).toBeNull();
+    expect(parseReminderTarget({})).toBeNull();
+    expect(parseReminderTarget({ kind: 'task' })).toBeNull();
+    expect(parseReminderTarget({ taskId: '' })).toBeNull();
+  });
+});
+
+describe('wantedReminders + reminderDiff (D13)', () => {  const base = {
     tasks: [makeTask({ scheduledDate: '2026-10-21', startTime: '14:00' })],
     habits: [makeHabit({ id: 'h1', name: 'Water' })],
     occurrences: [] as HabitOccurrence[],

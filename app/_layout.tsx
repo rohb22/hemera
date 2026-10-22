@@ -8,7 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { bootstrap } from '@/bootstrap';
 import { ToastHost } from '@/components/Toast';
-import { getLastResponseTaskId, onNotificationResponse } from '@/services/reminders';
+import { openReminderTarget, subscribeToNotificationTaps } from '@/lib/notificationNavigation';
 import { useTasksStore } from '@/stores/tasksStore';
 import { useUiStore } from '@/stores/uiStore';
 import { colors, fontFamily, spacing, type } from '@/theme/tokens';
@@ -80,15 +80,12 @@ export default function RootLayout() {
     };
   }, [ready]);
 
-  // D19: opening a task reminder lands on that task's sheet.
+  // D19: opening a task reminder lands on that task's sheet; the habit
+  // nudge lands on the Habits tab. The reminder service resolves its
+  // native module lazily, so this never blocks startup.
   useEffect(() => {
     if (!ready) return;
-    const openTask = (taskId: string | null) => {
-      if (taskId) router.push({ pathname: '/sheet/task', params: { id: taskId } });
-    };
-    const unsubscribe = onNotificationResponse(openTask);
-    void getLastResponseTaskId().then(openTask);
-    return unsubscribe;
+    return subscribeToNotificationTaps((target) => openReminderTarget(router, target));
   }, [ready, router]);
 
   if (!ready) {

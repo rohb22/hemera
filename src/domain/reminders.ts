@@ -16,6 +16,28 @@ export function taskReminderId(taskId: string): string {
 export const HABIT_NUDGE_ID = 'habit-nudge';
 export const HABIT_NUDGE_TITLE = 'Habits today';
 
+/**
+ * D19: where a tapped notification should take the user.
+ *
+ * `task` → the task's sheet; `habits` → the Habits tab.
+ */
+export type ReminderTarget = { kind: 'task'; taskId: string } | { kind: 'habits' };
+
+/**
+ * Reads the notification payload into a navigation target. Anything
+ * unrecognised yields null — a tap we do not understand must never send
+ * the user somewhere surprising.
+ */
+export function parseReminderTarget(data: unknown): ReminderTarget | null {
+  if (typeof data !== 'object' || data === null) return null;
+  const payload = data as { kind?: unknown; taskId?: unknown };
+  if (payload.kind === 'habits') return { kind: 'habits' };
+  if (typeof payload.taskId === 'string' && payload.taskId.length > 0) {
+    return { kind: 'task', taskId: payload.taskId };
+  }
+  return null;
+}
+
 /** `HH:mm` → minutes from midnight; invalid input returns null. */
 export function parseReminderTime(hhmm: string): number | null {
   const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(hhmm);

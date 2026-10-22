@@ -5,6 +5,7 @@
  */
 jest.mock('@/services/reminders', () => ({
   REMINDERS_CHANNEL_ID: 'reminders',
+  configureHandler: jest.fn(() => undefined),
   ensureChannel: jest.fn(async () => undefined),
   getPermission: jest.fn(async () => 'granted' as const),
   requestPermission: jest.fn(async () => 'granted' as const),
@@ -13,5 +14,5 @@ jest.mock('@/services/reminders', () => ({
   scheduleHabitNudge: jest.fn(async () => undefined),
   cancelById: jest.fn(async () => undefined),
   onNotificationResponse: jest.fn(() => () => undefined),
-  getLastResponseTaskId: jest.fn(async () => null),
+  getLastResponseTarget: jest.fn(async () => null),
 }));
