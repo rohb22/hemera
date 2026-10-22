@@ -151,3 +151,21 @@ apps. **Revisit it before any store release.** `INTERNET` stays in
 
 DoD gates for every milestone: `pnpm typecheck` + `pnpm lint` +
 `pnpm test` all clean.
+
+**Batch APK builds — do not build an APK per fix.** A preview build
+costs ~10 minutes of EAS time and the user's device-install cycle, so it
+is not the verification loop. Verify statically instead:
+
+- **Unit / render tests** (`pnpm test`) for anything JS-level: payloads,
+  navigation targets, component output.
+- **`npx expo prebuild --platform android --no-install --clean`** for
+  anything manifest/theme-level. The generated `android/` folder is
+  gitignored; read `android/app/src/main/AndroidManifest.xml` and
+  `android/app/src/main/res/values/styles.xml` to confirm permissions,
+  `windowLightStatusBar`, and the merged manifest. Delete `android/`
+  afterwards, and `git checkout -- package.json` (prebuild rewrites the
+  `android`/`ios` scripts).
+- **Library manifests** under `node_modules/<pkg>/android/src/main/` for
+  what Gradle merges in at build time (e.g. the `expo-notifications`
+  service, receiver and `NotificationForwarderActivity`).
+- Build the APK **once**, before the next feature milestone.

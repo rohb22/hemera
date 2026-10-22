@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { toDateKey } from '@/domain/calendar';
 import {
   DAY_LETTERS,
+  DAY_NAMES,
   dayIndexOfWeek,
   habitDayLabel,
   habitDayState,
@@ -12,16 +13,6 @@ import {
 } from '@/domain/habits';
 import type { Habit, HabitOccurrence, OccurrenceState } from '@/domain/types';
 import { colors, hitTarget, spacing } from '@/theme/tokens';
-
-const WEEKDAY_NAMES = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-] as const;
 
 interface ShapeSpec {
   size: number;
@@ -109,7 +100,7 @@ export function HabitDayCells({
         });
         const isToday = dateKey === todayKey;
         const editable = isToday;
-        const label = `${WEEKDAY_NAMES[weekdayIndex]}, ${habitDayLabel(state, planned)}`;
+        const label = `${DAY_NAMES[weekdayIndex]}, ${habitDayLabel(state, planned)}`;
         // A day that predates the habit is not part of its schedule, so its
         // letter stays faint even on a planned weekday.
         const emphasised = planned && state !== 'neutral';

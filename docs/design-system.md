@@ -70,10 +70,20 @@ with sensible max (1.6×) and reflows (no ellipsized headings).
 
 ### 1.5 System chrome
 
-- **Status bar:** dark content (`expo-status-bar`, `style="dark"`). The app
-  draws edge-to-edge over the paper background, so the bar carries no fill
-  of its own — it inherits `paper` and must therefore use dark text and
-  dark icons to stay legible. Light content on paper is never acceptable.
+- **Status bar:** dark content — dark text and dark icons. The app draws
+  edge-to-edge over the paper background (`android:statusBarColor` is
+  transparent), so the bar carries no fill of its own and inherits
+  `paper`. Light content on paper is never acceptable.
+  - The theme sets it: the `expo-status-bar` config plugin with
+    `{ "style": "dark" }` writes `android:windowLightStatusBar=true`
+    into `AppTheme`, so the bar is correct from the very first frame —
+    including the splash screen, before any JavaScript runs.
+  - The runtime sets it too: the root layout renders
+    `<StatusBar style="dark" />` (`expo-status-bar`), which reaches
+    React Native's `StatusBar.setBarStyle('dark-content')` →
+    `WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS`. The theme
+    alone would be enough; the runtime call keeps the bar correct if
+    anything else overrides the theme.
 - **Navigation bar:** the system gesture/button bar sits on `paper`.
 - The app is light-theme only; there is no dark variant to reconcile with.
 
@@ -132,6 +142,12 @@ pre-creation day can never be mistaken for a ticked-off one.
 
 Cell tap target ≥44 pt. Shape + size + colour + weekday-label
 quadruple-encode every state (FR-H3 AC, ux-design §8).
+
+Each cell's accessibility label names the weekday **and** its state
+("Monday, not planned", "Tuesday, missed", "Wednesday, done"). The week
+is Monday-first throughout: `DAY_LETTERS` and the label names share the
+same index (`dayIndexOfWeek` → 0 = Monday), so a label can never name a
+different day than the letter above it.
 
 ### 2.5 Timeline — compact rail (D8)
 Rail = 2 pt vertical hairline down the left; node = 8 pt dot on the rail
