@@ -80,7 +80,7 @@ Approved stage order (each requires user approval before starting):
 - `docs/product-brief.md` — approved product brief (stage 1)
 - `docs/product-requirements.md` — approved requirements (stage 2)
 - `docs/v1.1-reminders.md` — post-MVP v1.1 reminders spec (FR-R1–R6,
-  D13–D19; packaging plan §7)
+  D13–D20; packaging plan §7)
 - `docs/implementation-plan.md` — approved implementation plan (stage 4;
   milestones M0–M4, open decisions)
 - `assets/images/` — brand assets (`icon.png`, `splash-icon.png`,
@@ -136,6 +136,18 @@ expected; local notifications still work. For R4 device verification,
 build the dev client (`npx eas-cli build -p android --profile preview`)
 — that is the authoritative target, since the dev build carries the
 full native module set.
+
+**Exact alarms.** `app.json` declares
+`android.permission.USE_EXACT_ALARM` so Android schedules reminders as
+exact alarms (D20). Without it, `expo-notifications` falls back to
+`AlarmManagerCompat.setAndAllowWhileIdle` and reminders arrive late —
+sometimes much later on an idle device. `USE_EXACT_ALARM` is a *normal*
+permission: granted at install, no OS dialog, no "Alarms & reminders"
+screen. It is legitimate here only because Hemera is personal-use
+software distributed as a GitHub Release APK and never published to
+Google Play, which reserves the permission for reviewed alarm/calendar
+apps. **Revisit it before any store release.** `INTERNET` stays in
+`android.blockedPermissions`.
 
 DoD gates for every milestone: `pnpm typecheck` + `pnpm lint` +
 `pnpm test` all clean.
