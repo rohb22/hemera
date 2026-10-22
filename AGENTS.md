@@ -122,5 +122,20 @@ until the 15 s timeout and the app shows its boot-error screen. Local
 SQLite + phone-only scope (brief §8) means device/emulator is the only
 real target.
 
+**Notifications + Expo Go.** Expo Go ships local notifications but no
+push modules, so `expo-notifications`' package **barrel** cannot be
+imported under Expo Go — it throws `Cannot find native module
+'ExpoTopicSubscriptionModule'` at module-evaluation time and takes every
+route that imports it down with it (expo-router then reports those
+routes as "missing the required default export").
+`src/services/reminders.ts` therefore deep-imports the submodules it
+needs and requires them lazily; see `docs/v1.1-reminders.md` §4.2.1.
+**Never simplify those back into a barrel import.** The warning
+"[expo-notifications] Push notifications … unavailable in Expo Go" is
+expected; local notifications still work. For R4 device verification,
+build the dev client (`npx eas-cli build -p android --profile preview`)
+— that is the authoritative target, since the dev build carries the
+full native module set.
+
 DoD gates for every milestone: `pnpm typecheck` + `pnpm lint` +
 `pnpm test` all clean.
