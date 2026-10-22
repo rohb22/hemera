@@ -103,6 +103,11 @@ with sensible max (1.6×) and reflows (no ellipsized headings).
   fill (`surface` text), unselected = `surface` + hairline (`inkMuted`).
 - **Status chip:** "Today" pill (header), "target met" chip
   (`accentSoft` bg, `accent` text).
+- **Choice chip** (Reset my day review): one of the four choices on a
+  row — *Keep HH:mm* / *Move to pool* / *Pick HH:mm* / *Dismiss*. Selected
+  = `accent` fill (`surface` text); unselected = `surface` + hairline
+  (`ink` text). 40 pt tall pill, `type.caption` at weight 600. The chips
+  wrap onto a second line rather than scroll (D7).
 
 ### 2.2a Habit row (Habits tab)
 Full-width vertical row (no horizontal scrollers anywhere, D7, D10):
@@ -112,6 +117,15 @@ the 1-tap completion control) · quiet progress caption
 reached). Planned days are emphasised; unplanned days are shown faint but
 remain tappable today (D11). Tapping the row body opens the habit detail
 sheet (skip lives there).
+
+### 2.2b Reset review row (Reset my day, v1.2)
+A row of the review screen, stacked and full-width (no horizontal
+scrollers, D7): title `type.body` · caption `type.caption` `inkMuted`
+("was scheduled Wed 21 Oct, 09:00" — the exact date, D27) · a wrapped
+row of four **choice chips** (§2.2). The selected choice is the `accent`
+fill. A hairline separator sits between rows. The row carries no
+checkbox and no status: the question is only where the task lands
+today, so nothing else is shown (D25).
 
 ### 2.3 Task row
 Check control (44 pt, empty ring → `accent` filled + check on complete)
@@ -186,6 +200,9 @@ never carry state alone (paired with color/shape/label).
 - DO encode state with shape + label, not color alone.
 - DON'T use red anywhere except destructive confirmations.
 - DON'T add counts, percentages, streaks, or scores (H4, principles).
+- DO count only what still waits for a decision (the Reset my day line,
+  "N tasks are still waiting."); DON'T count what the user has already
+  done.
 - DO keep one accent; if a screen needs a second emphasis, it's
   probably two screens.
 - DO hide native scroll indicators app-wide (`showsVerticalScrollIndicator
