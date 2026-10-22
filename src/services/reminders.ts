@@ -70,6 +70,7 @@ interface EmitterModule {
     listener: (response: NotificationResponseLike) => void,
   ) => { remove: () => void };
   getLastNotificationResponseAsync: () => Promise<NotificationResponseLike | null>;
+  clearLastNotificationResponse: () => void;
 }
 
 interface HandlerModule {
@@ -291,7 +292,17 @@ export async function getLastResponseTarget(): Promise<ReminderTarget | null> {
   const emitter = loadEmitter();
   if (!emitter) return null;
   try {
-    return targetOf(await emitter.getLastNotificationResponseAsync());
+    const response = await emitter.getLastNotificationResponseAsync();
+    const target = targetOf(response);
+    // The native side keeps the last response until it is explicitly
+    // cleared. We have just consumed it, so clear it — otherwise a later
+    // cold start would re-open the same task sheet unprompted.
+    try {
+      emitter.clearLastNotificationResponse();
+    } catch {
+      // A native module without the clear function: nothing to clean up.
+    }
+    return target;
   } catch {
     return null;
   }

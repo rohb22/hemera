@@ -112,8 +112,14 @@ state shape:
 | missed (planned) | small circle 8 pt | `inkFaint` |
 | today, not yet | hollow ring 12 pt, 1.5 pt stroke | `inkMuted` |
 | planned, no record (past) | small circle 8 pt | `inkFaint` |
+| before the habit existed | hollow ring 12 pt, hairline stroke, weekday letter `inkFaint` | `hairline` |
 | unplanned / future-inactive | hollow ring 12 pt, hairline stroke | `hairline` |
 | unplanned (tappable today) | hollow ring 12 pt, hairline stroke, weekday letter `inkFaint` | `hairline` |
+
+A day that predates the habit wears **no filled dot** — it reads as
+inactive, never as completed. The filled-dot vocabulary is reserved for
+`done` (accent, 12 pt) and the small `missed` marker (faint, 8 pt), so a
+pre-creation day can never be mistaken for a ticked-off one.
 
 Cell tap target ≥44 pt. Shape + size + colour + weekday-label
 quadruple-encode every state (FR-H3 AC, ux-design §8).

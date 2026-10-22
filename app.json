@@ -16,6 +16,9 @@
       "blockedPermissions": [
         "android.permission.INTERNET"
       ],
+      "permissions": [
+        "android.permission.USE_EXACT_ALARM"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#FAF7F2"
