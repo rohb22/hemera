@@ -7,6 +7,7 @@ import {
   resetCaption,
 } from '@/domain/reset';
 import type { Task } from '@/domain/types';
+import { groupPool, timelineTasks } from '@/domain/taskLabels';
 
 /**
  * Reset My Day (v1.2). The candidate rule is the load-bearing part:
@@ -261,5 +262,61 @@ describe('planReset', () => {
     );
 
     expect(changedEntries(entries).map((e) => e.taskId)).toEqual(['a']);
+  });
+});
+
+/**
+ * The review and Today's pool must agree. The quiet line counts what
+ * "Needs rescheduling" holds, so the number on the line has to be the
+ * number of rows the review will open with (D21, D22).
+ *
+ * This is the split the device pass made concrete: a task that is
+ * merely late *today* lives on today's timeline, behind the now-dot,
+ * so it never reaches the pool — and it is not carried over either.
+ */
+describe('the review and the pool agree', () => {
+  const TODAY = '2026-10-22';
+
+  const carried = task({ id: 'carried', scheduledDate: '2026-10-21', startTime: '09:00' });
+  const lateToday = task({ id: 'late-today', scheduledDate: TODAY, startTime: '09:00' });
+  const future = task({ id: 'future', scheduledDate: '2026-10-24', startTime: '09:00' });
+  const unscheduled = task({
+    id: 'unscheduled',
+    scheduledDate: null,
+    startTime: null,
+    durationMin: null,
+  });
+  const old = task({ id: 'old', scheduledDate: '2026-10-01', startTime: '09:00' });
+
+  const tasks = [carried, lateToday, future, unscheduled, old];
+
+  function todaysPool() {
+    const onTimeline = new Set(timelineTasks(tasks, TODAY).map((t) => t.id));
+    return groupPool(
+      tasks.filter((t) => !onTimeline.has(t.id)),
+      NOW,
+    );
+  }
+
+  it('offers exactly the tasks under "Needs rescheduling"', () => {
+    const candidates = resetCandidates(tasks, NOW).map((c) => c.task.id);
+    const reschedule = todaysPool().reschedule.map((t) => t.id);
+
+    expect([...reschedule].sort()).toEqual([...candidates].sort());
+    expect(candidates).toEqual(['carried']);
+  });
+
+  it('keeps a task that is merely late today on the timeline, not in the pool', () => {
+    expect(timelineTasks(tasks, TODAY).map((t) => t.id)).toEqual(['late-today']);
+    expect(todaysPool().reschedule.map((t) => t.id)).not.toContain('late-today');
+    expect(resetCandidates(tasks, NOW).map((c) => c.task.id)).not.toContain('late-today');
+  });
+
+  it('leaves a task older than the 7-day window in "Later"', () => {
+    expect(todaysPool().later.map((t) => t.id)).toEqual(['old']);
+  });
+
+  it('leaves an unscheduled task in the plain pool', () => {
+    expect(todaysPool().pool.map((t) => t.id)).toEqual(['unscheduled']);
   });
 });

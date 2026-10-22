@@ -82,9 +82,10 @@ export function sameSchedule(a: ResetSchedule, b: ResetSchedule): boolean {
 /**
  * The tasks a review offers (D22): open, timed, scheduled on a day
  * before today, and inside D3's 7-day window. A task that is merely
- * late *today* is not carried over — it already has a one-tap action in
- * Today's "Needs rescheduling" section. The 7-day window comes from
- * `taskPoolSection`, so D3 stays the single source of truth.
+ * late *today* is not carried over — it is still on today's timeline,
+ * behind the now-dot, which is where its lateness shows. The 7-day
+ * window comes from `taskPoolSection`, so D3 stays the single source of
+ * truth.
  */
 export function resetCandidates(tasks: Task[], now: Date): ResetCandidate[] {
   const today = todayKey(now);
