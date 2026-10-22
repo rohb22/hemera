@@ -38,10 +38,19 @@ Approved stage order (each requires user approval before starting):
    `docs/v1.1-reminders.md` (FR-R1–R6, D13–D19), R4 device verification
    pending. Reminders are **local OS-scheduled notifications only** —
    opt-in in Settings, denied permission is a silent fallback, no
-   server/push/background fetch, `INTERNET` stays blocked. Next in the
-   post-MVP queue: Reset My Day (requirements §9), export/backup, D3
-   archive-threshold revisit; packaging plan (universal AAB →
-   bundletool per-ABI APKs) recorded in §7 of the v1.1 doc.
+   server/push/background fetch, `INTERNET` stays blocked.
+7. ▶️ Post-MVP — **v1.2 Reset My Day** approved; X1–X3 implemented on
+   `docs/v1.2-reset-my-day.md` (FR-X1–FR-X7, D21–D27), X4 device
+   verification pending. The review opens from a quiet line on Today
+   (D21), covers exactly the tasks carried over from earlier days
+   inside D3's 7-day window (D22), and every row defaults to *Keep
+   time* (D23). Choices are applied in one transaction with one Undo
+   and a history record written in the same transaction (D26). No
+   takeover, no badge, no guilt language.
+8. ▶️ Post-MVP queue (remaining): export/backup (requirements §11.2),
+   D3 7-day threshold revisit (§11.3), overlap rendering (§11.6);
+   packaging plan (universal AAB → bundletool per-ABI APKs) recorded in
+   §7 of the v1.1 doc.
 
 ## Confirmed constraints (from product brief §8)
 
@@ -51,7 +60,9 @@ Approved stage order (each requires user approval before starting):
   events, routines, goals, quick-capture inbox, Reset My Day, History
   UI, reminders, dark mode, localization. Do not add these without
   approval. (**v1.1 exception:** reminders left this list when the user
-  approved `docs/v1.1-reminders.md`; nothing else has.)
+  approved `docs/v1.1-reminders.md`. **v1.2 exception:** Reset My Day
+  left this list when the user approved `docs/v1.2-reset-my-day.md`.
+  Nothing else has.)
 - **Domain rules:** task deadline ≠ scheduled time (separate fields);
   each habit occurrence has independent state; missed ≠ deleted; NO
   streaks, scores, or guilt mechanics anywhere.
@@ -65,13 +76,16 @@ Approved stage order (each requires user approval before starting):
 ## Working agreement
 
 - Read `docs/product-requirements.md` before any behavioral or schema
-  decision (FR IDs, rules T/H/R, decisions D1–D12, assumptions A1–A14);
+  decision (FR IDs, rules T/H/R, decisions D1–D27, assumptions A1–A21);
   `docs/product-brief.md` is the source of truth for vision and scope.
+  Post-MVP features live in their own approved specs:
+  `docs/v1.1-reminders.md` (D13–D20) and
+  `docs/v1.2-reset-my-day.md` (D21–D27).
 - Interview-driven workflow: one high-impact question at a time;
   distinguish confirmed / assumed / open; ask for approval before
   creating deliverables.
-- Open questions (reminder strategy, export format, archive threshold
-  revisit) are listed in requirements §11 / brief §10 — resolve at the
+- Open questions (export format, archive threshold revisit, overlap
+  rendering) are listed in requirements §11 / brief §10 — resolve at the
   appropriate stage, don't silently decide.
 
 ## Repository layout
@@ -83,12 +97,18 @@ Approved stage order (each requires user approval before starting):
   D13–D20; packaging plan §7)
 - `docs/implementation-plan.md` — approved implementation plan (stage 4;
   milestones M0–M4, open decisions)
+- `docs/v1.2-reset-my-day.md` — post-MVP v1.2 Reset My Day spec
+  (FR-X1–FR-X7, D21–D27; milestones X1–X4)
 - `assets/images/` — brand assets (`icon.png`, `splash-icon.png`,
   `hemera-logo.png`); referenced from `app.json`
 - `app/` — Expo Router routes (`app/_layout.tsx`, `app/(tabs)/`,
-  `app/settings.tsx`, `app/archived-habits.tsx`, `app/sheet/*`)
+  `app/settings.tsx`, `app/archived-habits.tsx`, `app/reset.tsx`,
+  `app/sheet/*`)
 - `src/` — components, stores, repositories, `domain/` (pure), `db/`,
   `theme/`, `lib/`, `services.ts`, `bootstrap.ts`
+  (v1.2 adds `domain/reset.ts`, `repositories/resets.ts`,
+  `stores/resetStore.ts`, `components/ResetTaskRow.tsx`,
+  `components/ResetHintLine.tsx`, `db/migrations/002_day_resets.ts`)
 - `tests/` — Jest: domain + repository tests (Node env, `node:sqlite`)
 - `prototype/index.html` — throwaway design mock (not a deliverable)
 
@@ -104,6 +124,22 @@ allow-listed in `pnpm-workspace.yaml`.
 - `pnpm typecheck` — `tsc --noEmit`
 - `pnpm lint` — `expo lint` (ESLint 9 + `eslint-config-expo`)
 - `pnpm test` — Jest (`jest-expo` preset; `tests/**`)
+
+**After adding a route, regenerate the typed routes.** expo-router's
+typed routes live in the gitignored `.expo/types/router.d.ts` and are
+regenerated **only by the dev server** — `expo export` does not rewrite
+them. A new `app/reset.tsx` therefore fails `pnpm typecheck` with
+`Argument of type '"/reset"' is not assignable…` until you run
+`npx expo start --no-dev --offline` for ~45 s and stop it. Do that
+before trusting a typecheck failure on a new path.
+
+**Jest + React 19:** `render()` and `rerender()` are async — always
+`await` them. A `fireEvent.press` that changes state does **not** flush
+the re-render before the next assertion; wrap it in
+`await act(async () => { fireEvent.press(...) })` or the assertion reads
+the pre-update tree. `Platform.OS` is `ios` under the `jest-expo`
+preset, so mock `@react-native-community/datetimepicker` explicitly in
+render tests that open a time picker.
 
 **How to test without Android Studio:** this project is pinned to
 **Expo SDK 57** (`expo@~57.0.30`), because that is the SDK the Play

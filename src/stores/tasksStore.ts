@@ -34,7 +34,11 @@ export const useTasksStore = create<TasksState>((set, get) => ({
       set({ tasks, status: 'ready', error: null });
       // D13: the reminder set may have drifted while the app was closed
       // (or the day rolled over). Deferred to avoid an import cycle.
-      void import('@/stores/reminderSync').then((m) => m.syncReminders());
+      void import('@/stores/reminderSync')
+        .then((m) => m.syncReminders())
+        .catch(() => {
+          // already reported by the sync layer
+        });
     } catch (error) {
       set({ status: 'error', error: error instanceof Error ? error.message : 'Unknown error' });
     }

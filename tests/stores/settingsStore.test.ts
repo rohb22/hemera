@@ -5,6 +5,7 @@ import { setServices } from '@/services';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useUiStore } from '@/stores/uiStore';
 import type { HabitsRepository } from '@/repositories/habits';
+import type { ResetsRepository } from '@/repositories/resets';
 import type { SettingsRepository } from '@/repositories/settings';
 import type { TasksRepository } from '@/repositories/tasks';
 
@@ -33,6 +34,7 @@ beforeEach(() => {
     tasks: {} as TasksRepository,
     habits: {} as HabitsRepository,
     settings: repo as unknown as SettingsRepository,
+    resets: {} as ResetsRepository,
   });
   useSettingsStore.setState({
     status: 'idle',

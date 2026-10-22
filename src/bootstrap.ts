@@ -1,5 +1,6 @@
 import { openDatabase } from '@/db/open';
 import { createHabitsRepository } from '@/repositories/habits';
+import { createResetsRepository } from '@/repositories/resets';
 import { createSettingsRepository } from '@/repositories/settings';
 import { createTasksRepository } from '@/repositories/tasks';
 import { setServices } from '@/services';
@@ -14,6 +15,7 @@ export async function bootstrap(): Promise<void> {
     tasks: createTasksRepository(db),
     habits: createHabitsRepository(db),
     settings: createSettingsRepository(db),
+    resets: createResetsRepository(db),
   });
   useUiStore.getState().refreshNow();
   await useSettingsStore.getState().load();

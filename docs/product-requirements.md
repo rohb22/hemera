@@ -407,20 +407,30 @@ is an acceptance environment for every AC above.
 | Recurring tasks, subtasks, attachments, collaboration | Out of scope | — |
 | Overlap conflict resolution | Tolerate overlaps (A7) | — |
 
-## 9. Deferred Feature Specification: Reset My Day
+## 9. Reset My Day (deferred in MVP — built in v1.2)
 
-Specified now so architecture can accommodate it; **not built in MVP**.
+Specified in the MVP so architecture could accommodate it; **built in
+v1.2**. The approved specification is `docs/v1.2-reset-my-day.md`
+(D21–D27, FR-X1–FR-X7), which supersedes the sketch below.
 
-Trigger: user opens the app on a day after ≥ 1 day with unfinished
-scheduled tasks (or manual menu action).
+Sketch as written during the MVP stage: trigger when the user opens the
+app on a day after ≥ 1 day with unfinished scheduled tasks (or a manual
+menu action); a review screen listing preserved completed items
+(read-only, affirming) and unfinished scheduled tasks grouped by how
+late they are, with a per-item choice of *Keep time* (reschedule to the
+equivalent slot today), *Move to pool* (unschedule), *Pick new time* or
+*Dismiss* (leaves as-is, derives normally); missed habit occurrences
+shown as historical fact, never offered for "makeup," never
+guilt-laden; confirming applies the choices in one transaction and
+history records what happened.
 
-Flow: review screen lists preserved completed items (read-only,
-affirming) and unfinished scheduled tasks grouped by how late they are;
-per item, choose: *Keep time* (reschedule to equivalent slot today),
-*Move to pool* (unschedule), *Pick new time*, *Dismiss* (leaves as-is,
-derives normally). Missed habit occurrences are shown as historical
-fact, never offered for "makeup," never guilt-laden. Confirming applies
-choices in one transaction; history records what happened.
+**What v1.2 changed** (D21–D27): the trigger is a quiet line on Today
+rather than a takeover; the review covers exactly the carried-over
+tasks — no completed section, no habit occurrences, no deadline-only
+tasks; every row defaults to *Keep time*; *Keep time* keeps the clock
+time even when it has already passed today; the choices are applied in
+one transaction with a single undo, and the history record is written in
+that same transaction.
 
 ## 10. Success Criteria
 
@@ -439,7 +449,8 @@ Carried from brief §7, restated verifiable:
 1. ~~Reminder/notification strategy (v1.1)~~ **Resolved (post-MVP):**
    see `docs/v1.1-reminders.md` (D13–D19).
 2. Export format — brief §10.4.
-3. Revisit D3's 7-day threshold after beta usage.
+3. Revisit D3's 7-day threshold after beta usage. (v1.2's review
+   inherits this threshold: only tasks inside it are offered, D22.)
 4. **Reminder footnote (post-MVP):** in v1.1 reminders are local
    notifications (D13–D19); calendar-app sync (e.g. Yahoo Calendar) is
    explicitly not part of that decision and remains unconsidered.
@@ -447,6 +458,8 @@ Carried from brief §7, restated verifiable:
    represented by name + state dot only — no emoji, icon, monogram, or
    per-habit colour (D6).
 6. Overlap rendering style (stacked vs. side-by-side lanes).
+7. ~~Reset My Day (v1.2)~~ **Resolved (post-MVP):** see
+   `docs/v1.2-reset-my-day.md` (D21–D27).
 
 ## 12. Deltas vs. Product Brief (for brief errata pass)
 

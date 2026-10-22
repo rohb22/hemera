@@ -2,6 +2,7 @@ import '../helpers/remindersMock';
 
 import type { Habit, HabitOccurrence, NewHabitInput } from '@/domain/types';
 import type { HabitsRepository, HabitUpdate } from '@/repositories/habits';
+import type { ResetsRepository } from '@/repositories/resets';
 import type { SettingsRepository } from '@/repositories/settings';
 import type { TasksRepository } from '@/repositories/tasks';
 import { setServices } from '@/services';
@@ -43,6 +44,7 @@ beforeEach(() => {
     tasks: {} as TasksRepository,
     habits: repo as unknown as HabitsRepository,
     settings: {} as SettingsRepository,
+    resets: {} as ResetsRepository,
   });
   useHabitsStore.setState({
     status: 'idle',

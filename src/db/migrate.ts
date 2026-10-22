@@ -1,5 +1,6 @@
 import type { SqlExecutor } from './adapter';
 import * as migration001 from './migrations/001_initial';
+import * as migration002 from './migrations/002_day_resets';
 
 export interface Migration {
   version: number;
@@ -9,6 +10,7 @@ export interface Migration {
 
 export const migrations: Migration[] = [
   { version: migration001.version, name: migration001.name, sql: migration001.sql },
+  { version: migration002.version, name: migration002.name, sql: migration002.sql },
 ];
 
 const CREATE_MIGRATIONS_TABLE = `CREATE TABLE IF NOT EXISTS schema_migrations (

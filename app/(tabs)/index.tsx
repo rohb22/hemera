@@ -7,10 +7,12 @@ import { useReducedMotion } from 'react-native-reanimated';
 import { Button } from '@/components/PrimaryButton';
 import { Fab } from '@/components/Fab';
 import { Logo } from '@/components/Logo';
+import { ResetHintLine } from '@/components/ResetHintLine';
 import { Screen } from '@/components/Screen';
 import { NowMarker, TimelineRow } from '@/components/TimelineRow';
 import { TaskRow, type TaskRowVariant } from '@/components/TaskRow';
 import { formatDayHeading, todayKey } from '@/domain/calendar';
+import { resetCandidates } from '@/domain/reset';
 import { groupPool, taskCaption, timelineTasks } from '@/domain/taskLabels';
 import { clusterMarkerIndex, clusterTimeline, type TimelineCluster } from '@/domain/timeline';
 import type { Task } from '@/domain/types';
@@ -86,6 +88,14 @@ export default function TodayScreen() {
     );
   }, [tasks, timeline, now]);
   const clusters = useMemo(() => clusterTimeline(timeline), [timeline]);
+
+  // D21: the quiet line is the only entry point to the Reset My Day
+  // review. It counts what was carried over from earlier days and only
+  // ever appears on Today.
+  const carriedOverCount = useMemo(
+    () => (isViewingToday ? resetCandidates(tasks, now).length : 0),
+    [tasks, now, isViewingToday],
+  );
 
   const dayScheduled = useMemo(
     () => tasks.filter((task) => task.scheduledDate === viewDate),
@@ -310,6 +320,12 @@ export default function TodayScreen() {
           <Text style={styles.pillActiveText}>Today</Text>
         </Pressable>
       )}
+      {carriedOverCount > 0 ? (
+        <ResetHintLine
+          count={carriedOverCount}
+          onPress={() => router.push('/reset')}
+        />
+      ) : null}
     </View>
   );
 
